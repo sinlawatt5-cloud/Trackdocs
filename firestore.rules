@@ -1,0 +1,339 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userProfileExists() {
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return userProfileExists() && userProfile().role == 'admin';
+    }
+
+    function isOperation() {
+      return userProfileExists() && userProfile().role == 'operation';
+    }
+
+    function isCustomer() {
+      return userProfileExists() && userProfile().role == 'customer';
+    }
+
+    function isRoleValue(role) {
+      return role == 'customer' || role == 'operation' || role == 'admin';
+    }
+
+    function isShipmentStatusValue(status) {
+      return status == 'NOT_RECEIVED' || status == 'RECEIVED';
+    }
+
+    function isNullableString(value) {
+      return value == null || value is string;
+    }
+
+    match /users/{uid} {
+      function validUserCreate() {
+        return request.resource.data.keys().hasOnly([
+            'uid',
+            'displayName',
+            'email',
+            'role',
+            'customerId',
+            'customerCode',
+            'isActive',
+          ])
+          && request.resource.data.uid == uid
+          && request.resource.data.displayName is string
+          && request.resource.data.displayName.size() > 0
+          && request.resource.data.email is string
+          && request.resource.data.email.size() > 0
+          && isRoleValue(request.resource.data.role)
+          && isNullableString(request.resource.data.customerId)
+          && isNullableString(request.resource.data.customerCode)
+          && request.resource.data.isActive is bool;
+      }
+
+      function validSelfUpdate() {
+        return request.resource.data.keys().hasOnly([
+            'uid',
+            'displayName',
+            'email',
+            'role',
+            'customerId',
+            'customerCode',
+            'isActive',
+          ])
+          && request.resource.data.uid == uid
+          && request.resource.data.displayName is string
+          && request.resource.data.displayName.size() > 0
+          && request.resource.data.email == resource.data.email
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.customerId == resource.data.customerId
+          && request.resource.data.customerCode == resource.data.customerCode
+          && request.resource.data.isActive == resource.data.isActive
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName']);
+      }
+
+      // ผู้ใช้ทั่วไปอ่านได้เฉพาะโปรไฟล์ตัวเองเท่านั้น
+      allow get: if signedIn() && (isAdmin() || request.auth.uid == uid);
+
+      // หน้ารายการผู้ใช้ของแอดมินต้องใช้ list เพื่ออ่านทุกเอกสาร
+      allow list: if isAdmin();
+
+      // แอดมินเท่านั้นที่สร้างโปรไฟล์ผู้ใช้ได้
+      allow create: if isAdmin() && validUserCreate();
+
+      // ผู้ใช้ธรรมดาแก้ได้เฉพาะ displayName ของตัวเอง
+      allow update: if isAdmin() || (signedIn() && request.auth.uid == uid && validSelfUpdate());
+
+      // ลบเฉพาะแอดมิน
+      allow delete: if isAdmin();
+    }
+
+    match /customers/{customerId} {
+      function validCustomerCreate() {
+        return request.resource.data.keys().hasOnly([
+            'customerId',
+            'companyName',
+            'companyCode',
+            'isActive',
+            'createdAt',
+            'updatedAt',
+          ])
+          && request.resource.data.customerId == customerId
+          && request.resource.data.companyName is string
+          && request.resource.data.companyName.size() > 0
+          && request.resource.data.companyCode is string
+          && request.resource.data.companyCode.size() > 0
+          && request.resource.data.isActive is bool
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      function validCustomerUpdate() {
+        return request.resource.data.keys().hasOnly([
+            'customerId',
+            'companyName',
+            'companyCode',
+            'isActive',
+            'createdAt',
+            'updatedAt',
+          ])
+          && request.resource.data.customerId == customerId
+          && request.resource.data.companyName is string
+          && request.resource.data.companyName.size() > 0
+          && request.resource.data.companyCode is string
+          && request.resource.data.companyCode.size() > 0
+          && request.resource.data.isActive is bool
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      // authenticated user อ่านข้อมูลลูกค้าได้
+      allow read: if signedIn();
+
+      // เปลี่ยนข้อมูลลูกค้าได้เฉพาะแอดมิน
+      allow create: if isAdmin() && validCustomerCreate();
+      allow update: if isAdmin() && validCustomerUpdate();
+      allow delete: if isAdmin();
+    }
+
+    match /shipmentCounters/{customerCode} {
+      function isOwnerCounter() {
+        return isCustomer() && userProfile().customerCode == customerCode;
+      }
+
+      function validCounterCreate() {
+        return request.resource.data.keys().hasOnly(['companyCode', 'lastNumber', 'updatedAt'])
+          && request.resource.data.companyCode == customerCode
+          && request.resource.data.lastNumber is number
+          && request.resource.data.lastNumber == 1
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      function validCounterUpdate() {
+        return request.resource.data.keys().hasOnly(['companyCode', 'lastNumber', 'updatedAt'])
+          && resource.data.companyCode == customerCode
+          && request.resource.data.companyCode == customerCode
+          && request.resource.data.lastNumber is number
+          && request.resource.data.lastNumber == resource.data.lastNumber + 1
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      // เคาน์เตอร์เลขรายการอ่านได้เฉพาะเจ้าของบริษัท, operation และ admin
+      allow get, list: if isAdmin() || isOperation() || isOwnerCounter();
+
+      // customer ใช้ transaction สร้างเลขได้เฉพาะ customerCode ของตัวเอง
+      allow create: if isAdmin() || (isOwnerCounter() && validCounterCreate());
+      allow update: if isAdmin() || (isOwnerCounter() && validCounterUpdate());
+      allow delete: if isAdmin();
+    }
+
+    match /shipments/{shipmentId} {
+      function isOwnerShipment() {
+        return isCustomer() && resource.data.customerId == userProfile().customerId;
+      }
+
+      function validCustomerShipmentCreate() {
+        return request.resource.data.keys().hasOnly([
+            'shipmentId',
+            'trackingNo',
+            'customerId',
+            'customerCode',
+            'customerName',
+            'senderName',
+            'senderPhone',
+            'sentDate',
+            'envelopeCount',
+            'customerNote',
+            'envelopeImageKey',
+            'envelopeImageUrl',
+            'receiptImageKey',
+            'receiptImageUrl',
+            'receivedImageKey',
+            'receivedImageUrl',
+            'status',
+            'createdAt',
+            'createdBy',
+            'createdByName',
+            'receivedAt',
+            'receivedBy',
+            'receivedByName',
+            'operationReceiveNote',
+            'updatedAt',
+          ])
+          && request.resource.data.shipmentId == shipmentId
+          && request.resource.data.customerId == userProfile().customerId
+          && request.resource.data.customerCode == userProfile().customerCode
+          && request.resource.data.customerName is string
+          && request.resource.data.customerName.size() > 0
+          && request.resource.data.trackingNo is string
+          && request.resource.data.trackingNo.size() > 0
+          && request.resource.data.senderName is string
+          && request.resource.data.senderName.size() > 0
+          && request.resource.data.senderPhone is string
+          && request.resource.data.sentDate is string
+          && request.resource.data.envelopeCount is number
+          && request.resource.data.envelopeCount > 0
+          && request.resource.data.customerNote is string
+          && request.resource.data.envelopeImageKey is string
+          && request.resource.data.envelopeImageKey.size() > 0
+          && request.resource.data.envelopeImageUrl is string
+          && request.resource.data.envelopeImageUrl.size() > 0
+          && request.resource.data.receiptImageKey is string
+          && request.resource.data.receiptImageKey.size() > 0
+          && request.resource.data.receiptImageUrl is string
+          && request.resource.data.receiptImageUrl.size() > 0
+          && request.resource.data.receivedImageKey == ''
+          && request.resource.data.receivedImageUrl == ''
+          && request.resource.data.status == 'NOT_RECEIVED'
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.createdByName == userProfile().displayName
+          && request.resource.data.receivedAt == ''
+          && request.resource.data.receivedBy == ''
+          && request.resource.data.receivedByName == ''
+          && request.resource.data.operationReceiveNote == ''
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      function validCustomerShipmentUpdate() {
+        return resource.data.customerId == userProfile().customerId
+          && resource.data.customerCode == userProfile().customerCode
+          && resource.data.status == 'NOT_RECEIVED'
+          && request.resource.data.shipmentId == resource.data.shipmentId
+          && request.resource.data.customerId == resource.data.customerId
+          && request.resource.data.customerCode == resource.data.customerCode
+          && request.resource.data.trackingNo == resource.data.trackingNo
+          && request.resource.data.customerName == resource.data.customerName
+          && request.resource.data.envelopeImageKey == resource.data.envelopeImageKey
+          && request.resource.data.envelopeImageUrl == resource.data.envelopeImageUrl
+          && request.resource.data.receiptImageKey == resource.data.receiptImageKey
+          && request.resource.data.receiptImageUrl == resource.data.receiptImageUrl
+          && request.resource.data.receivedImageKey == resource.data.receivedImageKey
+          && request.resource.data.receivedImageUrl == resource.data.receivedImageUrl
+          && request.resource.data.status == 'NOT_RECEIVED'
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.createdBy == resource.data.createdBy
+          && request.resource.data.createdByName == resource.data.createdByName
+          && request.resource.data.receivedAt == resource.data.receivedAt
+          && request.resource.data.receivedBy == resource.data.receivedBy
+          && request.resource.data.receivedByName == resource.data.receivedByName
+          && request.resource.data.operationReceiveNote == resource.data.operationReceiveNote
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'senderName',
+            'senderPhone',
+            'sentDate',
+            'envelopeCount',
+            'customerNote',
+            'updatedAt',
+          ])
+          && request.resource.data.senderName is string
+          && request.resource.data.senderPhone is string
+          && request.resource.data.sentDate is string
+          && request.resource.data.envelopeCount is number
+          && request.resource.data.customerNote is string
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      function validOperationShipmentUpdate() {
+        return resource.data.status == 'NOT_RECEIVED'
+          && request.resource.data.shipmentId == resource.data.shipmentId
+          && request.resource.data.customerId == resource.data.customerId
+          && request.resource.data.customerCode == resource.data.customerCode
+          && request.resource.data.customerName == resource.data.customerName
+          && request.resource.data.trackingNo == resource.data.trackingNo
+          && request.resource.data.senderName == resource.data.senderName
+          && request.resource.data.senderPhone == resource.data.senderPhone
+          && request.resource.data.sentDate == resource.data.sentDate
+          && request.resource.data.envelopeCount == resource.data.envelopeCount
+          && request.resource.data.customerNote == resource.data.customerNote
+          && request.resource.data.envelopeImageKey == resource.data.envelopeImageKey
+          && request.resource.data.envelopeImageUrl == resource.data.envelopeImageUrl
+          && request.resource.data.receiptImageKey == resource.data.receiptImageKey
+          && request.resource.data.receiptImageUrl == resource.data.receiptImageUrl
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.createdBy == resource.data.createdBy
+          && request.resource.data.createdByName == resource.data.createdByName
+          && request.resource.data.status == 'RECEIVED'
+          && request.resource.data.receivedAt == request.time
+          && request.resource.data.receivedBy == request.auth.uid
+          && request.resource.data.receivedByName == userProfile().displayName
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'status',
+            'receivedAt',
+            'receivedBy',
+            'receivedByName',
+            'operationReceiveNote',
+            'receivedImageKey',
+            'receivedImageUrl',
+            'updatedAt',
+          ])
+          && request.resource.data.operationReceiveNote is string
+          && request.resource.data.receivedImageKey is string
+          && request.resource.data.receivedImageUrl is string
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      // customer เห็นเฉพาะ shipment ของตัวเอง, operation/admin เห็นทั้งหมด
+      allow get, list: if isAdmin() || isOperation() || (isCustomer() && isOwnerShipment());
+
+      // customer สร้างได้เฉพาะ shipment ของตัวเอง
+      allow create: if isAdmin() || (isCustomer() && validCustomerShipmentCreate());
+
+      // customer แก้ได้เฉพาะข้อมูลของตัวเองก่อนรับ และห้ามแตะ status
+      allow update: if isAdmin()
+        || (isOperation() && validOperationShipmentUpdate())
+        || (isCustomer() && validCustomerShipmentUpdate());
+
+      allow delete: if isAdmin();
+    }
+  }
+}
