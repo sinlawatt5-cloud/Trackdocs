@@ -19,9 +19,9 @@ export function Button({ className, tone = 'slate', type = 'button', ...props }:
     <button
       type={type}
       className={cn(
-        'trackdocs-text-ui ' +
+          'trackdocs-text-button ' +
           motion.button +
-          ' inline-flex items-center justify-center gap-2 rounded-[22px] px-5 py-3 text-sm font-semibold tracking-[0.01em] active:translate-y-[1px] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60',
+          ' inline-flex items-center justify-center gap-2 rounded-[22px] px-5 py-3 active:translate-y-[1px] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60',
         toneClasses[tone],
         className,
       )}

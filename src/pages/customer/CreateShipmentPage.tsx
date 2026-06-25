@@ -136,7 +136,7 @@ export function CreateShipmentPage() {
     return null
   }
 
-  if (userProfile.role !== 'customer') {
+  if (userProfile.role !== 'customer' && userProfile.role !== 'operation' && userProfile.role !== 'admin') {
     return <Navigate to={roleHomePath[userProfile.role]} replace />
   }
 

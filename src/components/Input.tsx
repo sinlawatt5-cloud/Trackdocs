@@ -26,7 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         id={id}
         aria-invalid={Boolean(error) || undefined}
         className={cn(
-          'trackdocs-input h-12 w-full trackdocs-text-ui text-sm transition duration-200 placeholder:text-[color:var(--td-text-muted)]',
+          'trackdocs-input h-12 w-full trackdocs-text-input transition duration-200 placeholder:text-[color:var(--td-text-muted)]',
           icon ? 'pl-11 pr-4' : 'px-4',
           error &&
             'border-[rgba(220,62,62,0.42)] focus:border-[rgba(220,62,62,0.65)] focus:shadow-[0_0_0_4px_rgba(220,62,62,0.12)]',

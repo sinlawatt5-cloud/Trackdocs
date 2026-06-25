@@ -23,9 +23,11 @@ const navigationByRole: Record<Role, { label: string; to: string; icon: ReactNod
   ],
   operation: [
     { label: 'Dashboard', to: '/operation/dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
+    { label: 'Create shipment', to: '/operation/create-shipment', icon: <FilePlus2 className="h-4 w-4" /> },
   ],
   admin: [
     { label: 'Dashboard', to: '/admin/dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
+    { label: 'Create shipment', to: '/admin/create-shipment', icon: <FilePlus2 className="h-4 w-4" /> },
     { label: 'Customers', to: '/admin/customers', icon: <Building2 className="h-4 w-4" /> },
     { label: 'Users', to: '/admin/users', icon: <Users2 className="h-4 w-4" /> },
     { label: 'Reports', to: '/admin/reports', icon: <BarChart3 className="h-4 w-4" /> },

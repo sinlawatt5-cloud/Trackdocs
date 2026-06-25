@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { AppShell } from '../../components/AppShell'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
@@ -91,36 +90,6 @@ export function AdminDashboardPage() {
       title="ศูนย์ควบคุมระบบ"
       subtitle="ดูภาพรวมลูกค้า ผู้ใช้งาน และรายงานล่าสุด พร้อมควบคุมสิทธิ์โดยไม่เปิดเผยข้อมูลเกินจำเป็น"
       density="compact"
-      actions={
-        <>
-          <div>
-            <p className="trackdocs-text-body-strong text-[1.15rem]">System control room</p>
-            <p className="trackdocs-text-helper mt-1">
-              ใช้ข้อมูลล่าสุด 50 รายการเพื่อให้หน้า admin อ่านง่ายและปลอดภัยกับ query
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Link
-              to="/admin/customers"
-              className="trackdocs-button-secondary rounded-full px-4 py-2 trackdocs-text-badge"
-            >
-              Customers
-            </Link>
-            <Link
-              to="/admin/users"
-              className="trackdocs-button-secondary rounded-full px-4 py-2 trackdocs-text-badge"
-            >
-              Users
-            </Link>
-            <Link
-              to="/admin/reports"
-              className="trackdocs-button-primary rounded-full px-4 py-2 trackdocs-text-badge"
-            >
-              Reports
-            </Link>
-          </div>
-        </>
-      }
     >
       <div className="trackdocs-page-entrance space-y-4">
         <div className="trackdocs-stagger-list grid items-start gap-4 md:grid-cols-3">

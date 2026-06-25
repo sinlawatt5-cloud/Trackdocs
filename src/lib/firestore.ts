@@ -355,8 +355,8 @@ export async function createCustomer(customerId: string, data: CreateCustomerInp
 }
 
 export async function reserveTrackingNoWithTransaction(userProfile: UserProfile) {
-  if (userProfile.role !== 'customer') {
-    throw new Error('เฉพาะลูกค้าเท่านั้นที่จองเลขรายการได้')
+  if (userProfile.role !== 'customer' && userProfile.role !== 'operation' && userProfile.role !== 'admin') {
+    throw new Error('เฉพาะลูกค้า, แผนกปฏิบัติการ และผู้ดูแลระบบเท่านั้นที่จองเลขรายการได้')
   }
 
   const customerCode = userProfile.customerCode?.trim()
@@ -410,8 +410,8 @@ export async function getNextTrackingNo(companyCode: string) {
 }
 
 export async function createShipment(data: CreateShipmentInput) {
-  if (data.userProfile.role !== 'customer') {
-    throw new Error('เฉพาะลูกค้าเท่านั้นที่สร้างรายการเอกสารได้')
+  if (data.userProfile.role !== 'customer' && data.userProfile.role !== 'operation' && data.userProfile.role !== 'admin') {
+    throw new Error('เฉพาะลูกค้า, แผนกปฏิบัติการ และผู้ดูแลระบบเท่านั้นที่สร้างรายการเอกสารได้')
   }
 
   if (!data.userProfile.customerId || !data.userProfile.customerCode) {

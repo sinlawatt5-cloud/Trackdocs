@@ -20,7 +20,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
       id={id}
       aria-invalid={Boolean(error) || undefined}
       className={cn(
-        'trackdocs-input trackdocs-text-ui h-12 w-full appearance-none px-4 pr-10 text-sm transition duration-200 placeholder:text-[color:var(--td-text-muted)]',
+        'trackdocs-input trackdocs-text-input h-12 w-full appearance-none px-4 pr-10 transition duration-200 placeholder:text-[color:var(--td-text-muted)]',
         error &&
           'border-[rgba(220,62,62,0.42)] focus:border-[rgba(220,62,62,0.65)] focus:shadow-[0_0_0_4px_rgba(220,62,62,0.12)]',
         className,

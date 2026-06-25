@@ -30,6 +30,7 @@ export default function App() {
 
           <Route element={<RoleGuard allow={['operation', 'admin']} />}>
             <Route path="/operation/dashboard" element={<OperationDashboardPage />} />
+            <Route path="/operation/create-shipment" element={<CreateShipmentPage />} />
           </Route>
 
           <Route element={<RoleGuard allow={['operation', 'admin', 'customer']} />}>
@@ -38,6 +39,7 @@ export default function App() {
 
           <Route element={<RoleGuard allow={['admin']} />}>
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+            <Route path="/admin/create-shipment" element={<CreateShipmentPage />} />
             <Route path="/admin/customers" element={<AdminCustomersPage />} />
             <Route path="/admin/users" element={<AdminUsersPage />} />
             <Route path="/admin/reports" element={<AdminReportsPage />} />

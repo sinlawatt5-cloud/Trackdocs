@@ -17,19 +17,22 @@
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
-  --text-hero: clamp(2.75rem, 4vw, 4.75rem);
-  --text-login-hero: clamp(2rem, 4.4vw, 2.9rem);
+  --text-hero: clamp(36px, 4vw, 56px);
+  --text-login-hero: clamp(34px, 4vw, 44px);
   --text-brand: clamp(2.6rem, 6vw, 3.55rem);
-  --leading-thai-tight: 1.18;
-  --leading-thai-normal: 1.48;
-  --leading-thai-relaxed: 1.68;
-  --tracking-ui: 0.01em;
-  --tracking-badge: 0.18em;
-  --tracking-brand: 0.1em;
-  --tracking-table: 0.14em;
-  --weight-black: 800;
-  --font-weight-ui: 500;
-  --font-weight-heading: 700;
+  --leading-thai-tight: 1.1;
+  --leading-thai-normal: 1.4;
+  --leading-thai-relaxed: 1.55;
+  --tracking-ui: 0em;
+  --tracking-badge: 0.14em;
+  --tracking-brand: 0.08em;
+  --tracking-table: 0.12em;
+  --weight-black: 900;
+  --weight-heavy: 850;
+  --weight-bold: 800;
+  --weight-semibold: 650;
+  --font-weight-ui: 600;
+  --font-weight-heading: 850;
   --td-bg: #e7e4dc;
   --td-bg-soft: #f3efe7;
   --td-soft-surface: rgba(245, 242, 237, 0.94);
@@ -396,6 +399,21 @@ textarea::placeholder {
   letter-spacing: var(--tracking-ui);
 }
 
+.trackdocs-text-input {
+  font-family: var(--font-ui);
+  font-size: clamp(14px, 1.5vw, 15px);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-ui);
+}
+
+.trackdocs-text-button {
+  font-family: var(--font-ui);
+  font-size: clamp(13px, 1.5vw, 15px);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
 .trackdocs-text-brand {
   font-family: var(--font-ui);
   font-weight: 700;
@@ -525,28 +543,28 @@ textarea::placeholder {
 
 .trackdocs-text-page-title {
   font-family: var(--font-ui);
-  font-size: clamp(2rem, 3vw, 3.2rem);
-  font-weight: var(--font-weight-heading);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
   line-height: var(--leading-thai-tight);
-  letter-spacing: -0.035em;
+  letter-spacing: -0.01em;
   color: var(--td-text-strong);
   text-wrap: balance;
 }
 
 .trackdocs-text-section-title {
   font-family: var(--font-ui);
-  font-size: var(--text-2xl);
-  font-weight: var(--font-weight-heading);
-  line-height: var(--leading-thai-tight);
-  letter-spacing: -0.03em;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: var(--weight-heavy);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
   color: var(--td-text-strong);
   text-wrap: balance;
 }
 
 .trackdocs-text-body {
   font-family: var(--font-ui);
-  font-size: var(--text-base);
-  font-weight: 400;
+  font-size: clamp(14px, 1.5vw, 15px);
+  font-weight: 500;
   line-height: var(--leading-thai-relaxed);
   letter-spacing: 0;
   color: var(--td-text-muted);
@@ -554,8 +572,8 @@ textarea::placeholder {
 
 .trackdocs-text-body-strong {
   font-family: var(--font-ui);
-  font-size: var(--text-base);
-  font-weight: 600;
+  font-size: clamp(14px, 1.5vw, 15px);
+  font-weight: var(--weight-semibold);
   line-height: var(--leading-thai-normal);
   letter-spacing: 0;
   color: var(--td-text-strong);
@@ -563,27 +581,27 @@ textarea::placeholder {
 
 .trackdocs-text-label {
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: var(--tracking-ui);
+  font-size: clamp(13px, 1.5vw, 14px);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+  letter-spacing: 0;
   color: var(--td-text-strong);
 }
 
 .trackdocs-text-helper {
   font-family: var(--font-ui);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.6;
+  font-size: clamp(12px, 1.5vw, 13px);
+  font-weight: 500;
+  line-height: 1.5;
   letter-spacing: 0;
   color: var(--td-text-muted);
 }
 
 .trackdocs-text-caption {
   font-family: var(--font-ui);
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: clamp(10px, 1vw, 12px);
+  font-weight: var(--weight-bold);
+  line-height: 1.1;
   letter-spacing: var(--tracking-badge);
   text-transform: uppercase;
   color: var(--td-text-muted);
@@ -591,8 +609,8 @@ textarea::placeholder {
 
 .trackdocs-text-badge {
   font-family: var(--font-ui);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: clamp(11px, 1.2vw, 13px);
+  font-weight: var(--weight-bold);
   line-height: 1;
   letter-spacing: var(--tracking-badge);
   text-transform: uppercase;
@@ -600,8 +618,8 @@ textarea::placeholder {
 
 .trackdocs-text-table-head {
   font-family: var(--font-ui);
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-size: clamp(10px, 1.2vw, 11px);
+  font-weight: var(--weight-bold);
   line-height: 1.1;
   letter-spacing: var(--tracking-table);
   text-transform: uppercase;
@@ -610,10 +628,10 @@ textarea::placeholder {
 
 .trackdocs-text-metric {
   font-family: var(--font-latin);
-  font-size: clamp(2.75rem, 3vw, 4rem);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
+  font-size: clamp(44px, 4vw, 58px);
+  font-weight: var(--weight-heavy);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
   color: var(--td-text-strong);
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
@@ -645,8 +663,8 @@ textarea::placeholder {
 
 .trackdocs-table thead th {
   font-family: var(--font-ui);
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-size: clamp(10px, 1.2vw, 11px);
+  font-weight: var(--weight-bold);
   line-height: 1.1;
   letter-spacing: var(--tracking-table);
   text-transform: uppercase;
@@ -655,7 +673,7 @@ textarea::placeholder {
 
 .trackdocs-table tbody td {
   font-family: var(--font-ui);
-  line-height: 1.55;
+  line-height: var(--leading-thai-relaxed);
 }
 
 img {
