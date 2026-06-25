@@ -51,7 +51,7 @@ export function LoginPage() {
   return (
     <div className="trackdocs-page overflow-hidden">
       <div className="trackdocs-shell relative flex min-h-[100dvh] items-center justify-center overflow-hidden px-4 py-6 sm:px-6 sm:py-8">
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="login-bg-ambient pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute left-[-10rem] top-[-9rem] h-[32rem] w-[32rem] rounded-full bg-[rgba(43,199,232,0.12)] blur-[120px]" />
           <div className="absolute right-[-8rem] top-[2rem] h-[20rem] w-[20rem] rounded-full bg-[rgba(15,23,42,0.06)] blur-[120px]" />
           <div className="absolute bottom-[-12rem] left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[rgba(215,234,73,0.08)] blur-[140px]" />
@@ -61,9 +61,9 @@ export function LoginPage() {
           <Card
             tone="glass"
             padding="lg"
-            className="trackdocs-login-card trackdocs-signal-panel trackdocs-page-entrance relative overflow-hidden border border-[rgba(15,23,42,0.12)] bg-[linear-gradient(180deg,rgba(250,250,248,0.96),rgba(242,244,239,0.92))] p-6 shadow-[0_30px_100px_rgba(15,23,42,0.16)] sm:p-8"
+            className="trackdocs-login-card trackdocs-signal-panel login-page-enter relative overflow-hidden border border-[rgba(15,23,42,0.12)] bg-[linear-gradient(180deg,rgba(250,250,248,0.96),rgba(242,244,239,0.92))] p-6 shadow-[0_30px_100px_rgba(15,23,42,0.16)] sm:p-8"
           >
-            <div className="trackdocs-entrance flex items-center gap-4 sm:gap-5">
+            <div className="login-logo-enter flex items-center gap-4 sm:gap-5">
               <div className="trackdocs-brand-mark flex h-[72px] w-[72px] items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#f2f962_0%,#d7ea49_56%,#b9d82b_100%)] text-[#1a2106] shadow-[0_18px_34px_rgba(215,234,73,0.26)]">
                 <ShieldCheck className="h-9 w-9" />
               </div>
@@ -72,15 +72,15 @@ export function LoginPage() {
               </div>
             </div>
 
-            <div className="trackdocs-entrance mt-8">
-              <h1 className="trackdocs-login-title">ยินดีต้อนรับกลับ</h1>
-              <p className="trackdocs-login-subtitle mt-3 max-w-xl">
+            <div className="mt-8">
+              <h1 className="trackdocs-login-title login-heading-enter">ยินดีต้อนรับกลับ</h1>
+              <p className="trackdocs-login-subtitle login-subtitle-enter mt-3 max-w-xl">
                 ใช้อีเมลและรหัสผ่านเพื่อเข้าใช้งาน TrackDocs ตามสิทธิ์ของคุณ
               </p>
-              <div className="trackdocs-route-line mt-6 opacity-70" aria-hidden="true" />
+              <div className="trackdocs-route-line login-subtitle-enter mt-6 opacity-70" aria-hidden="true" />
             </div>
 
-            <form className="trackdocs-stagger-list mt-7 space-y-5" onSubmit={form.handleSubmit(handleSubmit)} noValidate>
+            <form className="login-form-stagger mt-7 space-y-5" onSubmit={form.handleSubmit(handleSubmit)} noValidate>
               <Input
                 id="login-email"
                 type="email"
@@ -103,7 +103,7 @@ export function LoginPage() {
               />
 
               {errorMessage ? (
-                <div className="trackdocs-entrance rounded-[20px] border border-[rgba(244,63,94,0.18)] bg-[rgba(255,241,242,0.88)] px-4 py-3 trackdocs-text-body text-rose-600">
+                <div className="login-error-feedback rounded-[20px] border border-[rgba(244,63,94,0.18)] bg-[rgba(255,241,242,0.88)] px-4 py-3 trackdocs-text-body text-rose-600">
                   {errorMessage}
                 </div>
               ) : null}
@@ -120,7 +120,7 @@ export function LoginPage() {
               </Button>
             </form>
 
-            <div className="trackdocs-login-note trackdocs-entrance mt-6 rounded-[22px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.72)] px-4 py-4 text-center">
+            <div className="trackdocs-login-note login-form-stagger mt-6 rounded-[22px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.72)] px-4 py-4 text-center">
               หากยังไม่มีบัญชี กรุณาติดต่อผู้ดูแลระบบเพื่อสร้างผู้ใช้และกำหนด ROLE
             </div>
           </Card>

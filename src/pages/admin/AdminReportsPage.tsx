@@ -55,6 +55,7 @@ export function AdminReportsPage() {
 
   useEffect(() => {
     void loadData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
 
   const customerOptions = useMemo(

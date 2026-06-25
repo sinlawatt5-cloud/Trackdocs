@@ -78,13 +78,17 @@
   --td-brand-line: rgba(15, 23, 42, 0.08);
   --td-brand-line-strong: rgba(43, 199, 232, 0.2);
   --td-brand-grid: rgba(15, 23, 42, 0.025);
-  --motion-fast: 120ms;
-  --motion-base: 220ms;
-  --motion-slow: 320ms;
-  --motion-ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
-  --motion-lift: 3px;
-  --motion-press-scale: 0.98;
+  --motion-fast: 160ms;
+  --motion-normal: 240ms;
+  --motion-slow: 360ms;
+  --motion-premium: 560ms;
+  --motion-premium-slow: 680ms;
+  --stagger-premium: 100ms;
+  --stagger-login: 90ms;
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-press: cubic-bezier(0.2, 0, 0, 1);
+  --lift-card: -2px;
+  --lift-button: -1px;
   --cursor-default: url('/cursors/cursor-default.svg') 8 8, auto;
   --cursor-pointer: pointer;
   --cursor-pointer-active: pointer;
@@ -116,6 +120,29 @@ html {
   min-height: 100%;
   scroll-behavior: smooth;
   background: #efebe3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transform: none !important;
+  }
+  
+  .login-page-enter,
+  .login-card-enter,
+  .login-logo-enter,
+  .login-heading-enter,
+  .login-subtitle-enter,
+  .login-form-stagger > *,
+  .login-error-feedback {
+    animation-duration: 160ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  .login-bg-ambient {
+    animation: none !important;
+  }
 }
 
 body {
@@ -243,18 +270,22 @@ body {
 @media (hover: hover) and (pointer: fine) {
   :where(html, body, a, button, [role='button'], .clickable, .trackdocs-button-primary, .trackdocs-button-secondary, .trackdocs-card, .trackdocs-card-inner, .trackdocs-card-strong, .trackdocs-pill, select, [draggable='true'], .draggable) {
     transition:
-      transform var(--motion-base) var(--motion-ease-premium),
-      box-shadow var(--motion-base) var(--motion-ease-premium),
-      border-color var(--motion-base) var(--motion-ease-premium),
-      background-color var(--motion-base) var(--motion-ease-premium),
-      color var(--motion-base) var(--motion-ease-premium),
-      filter var(--motion-base) var(--motion-ease-premium),
-      opacity var(--motion-base) var(--motion-ease-premium);
+      transform var(--motion-normal) var(--ease-premium),
+      box-shadow var(--motion-normal) var(--ease-premium),
+      border-color var(--motion-normal) var(--ease-premium),
+      background-color var(--motion-normal) var(--ease-premium),
+      color var(--motion-normal) var(--ease-premium),
+      filter var(--motion-normal) var(--ease-premium),
+      opacity var(--motion-normal) var(--ease-premium);
     will-change: transform;
   }
 
-  :where(a, button, [role='button'], .clickable, .trackdocs-button-primary, .trackdocs-button-secondary, .trackdocs-card, .trackdocs-card-inner, .trackdocs-card-strong, .trackdocs-pill, select, [draggable='true'], .draggable):not(:disabled):not([aria-disabled='true']):hover {
-    transform: translateY(calc(var(--motion-lift) * -1));
+  :where(a, button, [role='button'], .clickable, .trackdocs-button-primary, .trackdocs-button-secondary, .trackdocs-pill, select, [draggable='true'], .draggable):not(:disabled):not([aria-disabled='true']):hover {
+    transform: translateY(var(--lift-button));
+  }
+
+  :where(.trackdocs-card, .trackdocs-card-inner, .trackdocs-card-strong):hover {
+    transform: translateY(var(--lift-card));
   }
 
   :where(button, [role='button'], .clickable, .trackdocs-button-primary, .trackdocs-button-secondary, select):not(:disabled):not([aria-disabled='true']):hover {
@@ -288,8 +319,9 @@ body {
   }
 
   :where(a, button, [role='button'], .clickable, .trackdocs-button-primary, .trackdocs-button-secondary, select):not(:disabled):not([aria-disabled='true']):active {
-    transform: translateY(1px) scale(var(--motion-press-scale));
-    box-shadow: var(--shadow-pressed) !important;
+    transform: translateY(1px) scale(0.99);
+    transition: all var(--motion-fast) var(--ease-press);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important;
   }
 
   :where(a, button, [role='button'], .clickable, .trackdocs-button-primary, .trackdocs-button-secondary, select):not(:disabled):not([aria-disabled='true']):focus-visible {
@@ -302,9 +334,10 @@ body {
   :where(input, textarea, [contenteditable='true']):focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 4px rgba(43, 199, 232, 0.12),
-      0 16px 24px rgba(15, 23, 42, 0.08);
-    transform: translateY(calc(var(--motion-lift) * -0.33));
+      inset 0 1px 3px rgba(0,0,0,0.02),
+      0 0 0 3px rgba(215, 234, 73, 0.15),
+      0 0 0 1px rgba(15, 23, 42, 0.05);
+    background-color: var(--td-surface-strong);
   }
 }
 
@@ -445,15 +478,18 @@ textarea::placeholder {
     linear-gradient(180deg, rgba(236, 246, 255, 0.98), rgba(247, 251, 255, 0.98));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 12px 24px rgba(15, 23, 42, 0.06),
-    0 24px 48px rgba(15, 23, 42, 0.03);
+    0 6px 12px rgba(15, 23, 42, 0.03);
+  transition: all var(--motion-normal) var(--ease-premium);
 }
 
 .trackdocs-login-card .trackdocs-input:focus {
-  border-color: rgba(43, 199, 232, 0.68);
+  border-color: rgba(43, 199, 232, 0.4);
+  background: rgba(255, 255, 255, 0.98);
   box-shadow:
-    0 0 0 4px rgba(43, 199, 232, 0.14),
-    0 16px 24px rgba(15, 23, 42, 0.08);
+    inset 0 2px 4px rgba(15, 23, 42, 0.02),
+    0 0 0 3px rgba(43, 199, 232, 0.08);
+  transform: translateY(-0.5px);
+  transition: all var(--motion-normal) var(--ease-premium);
 }
 
 .trackdocs-login-button {
@@ -795,7 +831,7 @@ img {
   inset: 0;
   transform: translateX(-100%);
   background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.68) 48%, transparent 66%);
-  animation: trackdocs-shimmer 1.6s var(--motion-ease-soft) infinite;
+  animation: trackdocs-shimmer 1.4s var(--ease-premium) infinite;
   pointer-events: none;
 }
 
@@ -808,7 +844,7 @@ img {
 }
 
 .trackdocs-motion-status {
-  animation: trackdocs-status-pop var(--motion-base) var(--motion-ease-premium) both;
+  animation: trackdocs-status-pop var(--motion-normal) var(--ease-premium) both;
 }
 
 .trackdocs-motion-glow {
@@ -906,67 +942,72 @@ img {
 }
 
 .trackdocs-page-entrance {
-  animation: trackdocs-fade-up var(--motion-slow) var(--motion-ease-premium) both;
+  animation: trackdocs-fade-page 620ms var(--ease-premium) both;
 }
 
-.trackdocs-entrance {
-  animation: trackdocs-fade-up var(--motion-base) var(--motion-ease-premium) both;
+.trackdocs-hero-entrance {
+  animation: trackdocs-fade-hero var(--motion-premium) var(--ease-premium) both;
+}
+
+.trackdocs-entrance,
+.trackdocs-module-entrance {
+  animation: trackdocs-fade-module 660ms var(--ease-premium) both;
 }
 
 .trackdocs-stagger-list > * {
-  animation: trackdocs-fade-up var(--motion-base) var(--motion-ease-premium) both;
+  animation: trackdocs-fade-stat 580ms var(--ease-premium) both;
 }
 
 .trackdocs-stagger-list > *:nth-child(2) {
-  animation-delay: 70ms;
+  animation-delay: 100ms;
 }
 
 .trackdocs-stagger-list > *:nth-child(3) {
-  animation-delay: 140ms;
+  animation-delay: 200ms;
 }
 
 .trackdocs-stagger-list > *:nth-child(4) {
-  animation-delay: 210ms;
+  animation-delay: 300ms;
 }
 
 .trackdocs-stagger-list > *:nth-child(5) {
-  animation-delay: 280ms;
+  animation-delay: 400ms;
 }
 
 .trackdocs-stagger-list > *:nth-child(6) {
-  animation-delay: 350ms;
+  animation-delay: 500ms;
 }
 
 .trackdocs-stagger-list > *:nth-child(7) {
-  animation-delay: 420ms;
+  animation-delay: 600ms;
 }
 
 .trackdocs-stagger-list > *:nth-child(8) {
-  animation-delay: 490ms;
-}
-
-.trackdocs-stagger-list > *:nth-child(9) {
-  animation-delay: 560ms;
-}
-
-.trackdocs-stagger-list > *:nth-child(10) {
-  animation-delay: 630ms;
-}
-
-.trackdocs-stagger-list > *:nth-child(11) {
   animation-delay: 700ms;
 }
 
+.trackdocs-stagger-list > *:nth-child(9) {
+  animation-delay: 800ms;
+}
+
+.trackdocs-stagger-list > *:nth-child(10) {
+  animation-delay: 900ms;
+}
+
+.trackdocs-stagger-list > *:nth-child(11) {
+  animation-delay: 1000ms;
+}
+
 .trackdocs-stagger-list > *:nth-child(12) {
-  animation-delay: 770ms;
+  animation-delay: 1100ms;
 }
 
 .trackdocs-modal-backdrop {
-  animation: trackdocs-toast-in var(--motion-base) var(--motion-ease-soft) both;
+  animation: trackdocs-toast-in 260ms var(--ease-premium) both;
 }
 
 .trackdocs-modal-surface {
-  animation: trackdocs-pop-in var(--motion-base) var(--motion-ease-premium) both;
+  animation: trackdocs-pop-modal 300ms var(--ease-premium) both;
 }
 
 .trackdocs-toast {
@@ -1256,39 +1297,148 @@ img {
   pointer-events: none;
 }
 
-@keyframes trackdocs-fade-up {
+@keyframes trackdocs-fade-page {
   0% {
     opacity: 0;
-    transform: translate3d(0, 16px, 0) scale(0.985);
+    transform: translate3d(0, 10px, 0);
   }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
 
+@keyframes trackdocs-fade-hero {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.99);
+  }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
+@keyframes trackdocs-fade-stat {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes trackdocs-fade-module {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes trackdocs-pop-modal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes trackdocs-fade-up-login {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes trackdocs-logo-reveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes trackdocs-fade-down {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.login-page-enter {
+  animation: trackdocs-fade-up-login var(--motion-premium) var(--ease-premium) both;
+}
+
+.login-logo-enter {
+  animation: trackdocs-logo-reveal var(--motion-premium-soft) var(--ease-premium) 80ms both;
+}
+
+.login-heading-enter {
+  animation: trackdocs-logo-reveal 560ms var(--ease-premium) both;
+}
+
+.login-subtitle-enter {
+  animation: trackdocs-logo-reveal 600ms var(--ease-premium) 80ms both;
+}
+
+.login-form-stagger > * {
+  animation: trackdocs-logo-reveal var(--motion-premium-soft) var(--ease-premium) both;
+}
+
+.login-form-stagger > *:nth-child(1) { animation-delay: 80ms; }
+.login-form-stagger > *:nth-child(2) { animation-delay: 170ms; }
+.login-form-stagger > *:nth-child(3) { animation-delay: 260ms; }
+.login-form-stagger > *:nth-child(4) { animation-delay: 350ms; }
+
+.login-error-feedback {
+  animation: trackdocs-fade-down 240ms var(--ease-premium) both;
+}
+
+.login-bg-ambient {
+  animation: trackdocs-breathing 10s ease-in-out infinite alternate;
+}
+
 @keyframes trackdocs-pop-in {
   0% {
     opacity: 0;
-    transform: translate3d(0, 10px, 0) scale(0.98);
+    transform: scale(0.98);
   }
 
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: scale(1);
   }
 }
 
 @keyframes trackdocs-toast-in {
   0% {
     opacity: 0;
-    transform: translate3d(0, -10px, 0) scale(0.98);
+    transform: translate3d(0, -16px, 0);
   }
 
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -1406,6 +1556,8 @@ img {
 @media (prefers-reduced-motion: reduce) {
   .trackdocs-page-entrance,
   .trackdocs-entrance,
+  .trackdocs-hero-entrance,
+  .trackdocs-module-entrance,
   .trackdocs-stagger-list > *,
   .trackdocs-modal-backdrop,
   .trackdocs-modal-surface,
@@ -1423,7 +1575,9 @@ img {
   .trackdocs-skeleton-line,
   .trackdocs-skeleton-block,
   .trackdocs-skeleton-avatar {
-    animation: none !important;
+    animation-duration: 160ms !important;
+    animation-delay: 0ms !important;
+    transform: none !important;
   }
 
   .trackdocs-button-primary::before,
