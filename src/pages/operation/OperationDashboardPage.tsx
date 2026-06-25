@@ -197,6 +197,7 @@ export function OperationDashboardPage() {
 
   return (
     <AppShell
+      density="compact"
       title="ศูนย์รับเอกสาร"
       subtitle="ตรวจรับเอกสารจากทุกบริษัท กรองตามสถานะหรือวันที่ และจัดการงานล่าสุดได้จากจุดเดียว"
       actions={
@@ -326,9 +327,9 @@ export function OperationDashboardPage() {
               ))}
             </div>
 
-            <label className="block space-y-2">
-              <span className="trackdocs-text-label">เลือกวันที่</span>
-              <div className="flex items-center gap-3 rounded-[20px] border border-[rgba(15,23,42,0.1)] bg-white px-4 py-3 shadow-[0_12px_24px_rgba(17,17,17,0.05)]">
+            <label className="block space-y-1.5">
+              <span className="trackdocs-text-label text-xs">เลือกวันที่</span>
+              <div className="flex items-center gap-3 rounded-[16px] border border-[rgba(15,23,42,0.1)] bg-white px-3 py-2 shadow-[0_12px_24px_rgba(17,17,17,0.05)]">
                 <CalendarDays className="h-4 w-4 text-[var(--td-text-muted)]" />
                 <input
                   type="date"
@@ -338,15 +339,15 @@ export function OperationDashboardPage() {
                     setSelectedDate(nextDate)
                     setFilter(nextDate ? 'date' : 'all')
                   }}
-                  className="w-full bg-transparent trackdocs-text-body text-[var(--td-text-strong)] outline-none"
+                  className="w-full bg-transparent trackdocs-text-body text-[0.9rem] text-[var(--td-text-strong)] outline-none"
                 />
               </div>
             </label>
 
-            <div className="rounded-[22px] border border-[rgba(15,23,42,0.08)] bg-[rgba(248,250,251,0.96)] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
+            <div className="rounded-[20px] border border-[rgba(15,23,42,0.08)] bg-[rgba(248,250,251,0.96)] px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
               <p className="trackdocs-text-badge text-[var(--td-text-muted)]">Current filter</p>
-              <p className="mt-2 trackdocs-text-body-strong">{currentFilterLabel}</p>
-              <p className="mt-1 trackdocs-text-body text-[var(--td-text-muted)]">
+              <p className="mt-1 trackdocs-text-body-strong text-[0.9rem]">{currentFilterLabel}</p>
+              <p className="mt-1 trackdocs-text-body text-[0.8rem] leading-snug text-[var(--td-text-muted)]">
                 แสดงข้อมูลรายการล่าสุด 50 รายการตามสถานะ {filter === 'date' && selectedDate ? 'และวันที่เลือก' : 'หรือช่วงเวลาที่กำหนด'}
               </p>
             </div>
@@ -379,7 +380,7 @@ function OperationShipmentCards({
         const canReceive = shipment.status === 'NOT_RECEIVED'
 
         return (
-          <article key={shipment.shipmentId} className="trackdocs-card trackdocs-card-strong trackdocs-card-module flex min-h-[390px] flex-col p-6 sm:p-7">
+          <article key={shipment.shipmentId} className="trackdocs-card trackdocs-card-strong trackdocs-card-module flex min-h-[280px] flex-col p-5 sm:p-6">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-3">
                 <span className="trackdocs-card-badge px-3 py-1.5 text-[var(--td-text-muted)]">

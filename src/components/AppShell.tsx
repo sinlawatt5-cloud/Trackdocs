@@ -10,9 +10,10 @@ interface AppShellProps {
   subtitle?: string
   children: ReactNode
   actions?: ReactNode
+  density?: 'normal' | 'compact'
 }
 
-export function AppShell({ title, subtitle, children, actions }: AppShellProps) {
+export function AppShell({ title, subtitle, children, actions, density = 'normal' }: AppShellProps) {
   const { session, signOut } = useAuth()
 
   if (!session) {
@@ -23,7 +24,7 @@ export function AppShell({ title, subtitle, children, actions }: AppShellProps) 
     <div className="trackdocs-page">
       <div className="trackdocs-shell min-h-[100dvh] px-3 py-3 sm:px-4 sm:py-4 lg:px-0 lg:py-0">
         <div className="mx-auto grid min-h-[calc(100dvh-1.5rem)] w-full max-w-none gap-4 lg:min-h-[100dvh] lg:grid-cols-[284px_minmax(0,1fr)] lg:gap-0">
-          <div className="hidden lg:block">
+          <div className="hidden overflow-visible relative z-10 lg:block">
             <Sidebar session={session} />
           </div>
           <div className="flex min-h-[calc(100dvh-1.5rem)] flex-col gap-5 lg:min-h-[100dvh] lg:gap-6 lg:px-8 lg:py-8 xl:px-10">
@@ -32,7 +33,7 @@ export function AppShell({ title, subtitle, children, actions }: AppShellProps) 
             </div>
             <main className={motion.page + ' flex-1 pb-2 sm:pb-4'}>
               <div className="trackdocs-stagger-list flex w-full flex-col gap-5 lg:gap-7">
-                <Topbar session={session} title={title} subtitle={subtitle} onSignOut={signOut} />
+                <Topbar session={session} title={title} subtitle={subtitle} onSignOut={signOut} compact={density === 'compact'} />
                 {actions ? (
                   <Card
                     tone="glass"

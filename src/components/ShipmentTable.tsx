@@ -25,8 +25,8 @@ function formatDateLabel(value: string) {
 
 export function ShipmentTable({ shipments, onReceive }: ShipmentTableProps) {
   return (
-    <div className={motion.card + ' trackdocs-entrance trackdocs-card trackdocs-card-strong trackdocs-card-module overflow-hidden rounded-[32px]'}>
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[rgba(15,23,42,0.08)] px-6 py-6">
+    <div className={motion.card + ' trackdocs-entrance trackdocs-card trackdocs-card-strong trackdocs-card-module overflow-hidden rounded-[24px]'}>
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[rgba(15,23,42,0.08)] px-5 py-4">
         <div className="space-y-2">
           <div className="trackdocs-card-badge px-3 py-1.5 text-[var(--td-text-muted)]">
             <span className="trackdocs-card-badge-dot" />
@@ -37,7 +37,7 @@ export function ShipmentTable({ shipments, onReceive }: ShipmentTableProps) {
             <p className="trackdocs-text-body mt-1">อัปเดตล่าสุดเพื่อให้ทีมตรวจสอบและติดตามสถานะได้ต่อเนื่อง</p>
           </div>
         </div>
-        <div className="trackdocs-button-primary inline-flex items-center gap-2 rounded-full px-5 py-3 trackdocs-text-badge">
+        <div className="trackdocs-button-primary inline-flex items-center gap-2 rounded-full px-4 py-2 trackdocs-text-badge">
           {shipments.length} records
         </div>
       </div>

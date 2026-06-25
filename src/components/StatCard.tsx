@@ -47,15 +47,15 @@ export function StatCard({ label, value, description, tone, trend, compact = fal
     <div
       className={cn(
         'trackdocs-card trackdocs-card-strong trackdocs-signal-panel flex flex-col self-stretch',
-        compact ? 'min-h-[172px] rounded-[24px] p-5 lg:p-6' : 'min-h-[276px] rounded-[30px] p-7 sm:p-8',
+        compact ? 'min-h-[140px] rounded-[20px] p-4 lg:p-5' : 'min-h-[276px] rounded-[30px] p-7 sm:p-8',
         toneMap[tone],
       )}
     >
       <div className="flex items-start justify-between gap-4">
-        <span className="trackdocs-proof-stamp gap-2 px-3 py-1.5 text-[var(--td-text-muted)]">
+        <span className="trackdocs-proof-stamp gap-2 px-3 py-1.5 text-[var(--td-text-muted)] rounded-full border border-[rgba(255,255,255,0.6)] bg-[linear-gradient(145deg,rgba(255,255,255,0.9),rgba(248,245,239,0.7))] shadow-[inset_1px_1px_0_rgba(255,255,255,0.9),2px_2px_6px_rgba(0,0,0,0.03)]">
           <span
             className={cn(
-              'inline-flex h-4 w-4 items-center justify-center rounded-full bg-white/92',
+              'inline-flex h-4 w-4 items-center justify-center rounded-full bg-[linear-gradient(145deg,rgba(255,255,255,1),rgba(245,245,245,0.9))] shadow-[1px_1px_3px_rgba(0,0,0,0.05)]',
               tone === 'cyan' && 'text-[#148fb2]',
               tone === 'amber' && 'text-[#b46d05]',
               tone === 'green' && 'text-[#188854]',
@@ -68,17 +68,17 @@ export function StatCard({ label, value, description, tone, trend, compact = fal
           </span>
           {label}
         </span>
-        <span className="trackdocs-text-badge rounded-full border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.92)] px-3 py-1 text-[var(--td-text-muted)]">
+        <span className="trackdocs-text-badge rounded-full border border-[rgba(255,255,255,0.8)] bg-[linear-gradient(145deg,rgba(255,255,255,0.9),rgba(248,245,239,0.8))] px-3 py-1 text-[var(--td-text-muted)] shadow-[inset_1px_1px_0_rgba(255,255,255,0.9),1px_2px_4px_rgba(0,0,0,0.03)]">
           {trend ?? 'LIVE'}
         </span>
       </div>
 
-      <div className={cn('grid flex-1 grid-cols-[minmax(0,1fr)_auto] items-start gap-5', compact ? 'mt-6' : 'mt-8')}>
+      <div className={cn('grid flex-1 grid-cols-[minmax(0,1fr)_auto] items-start gap-5', compact ? 'mt-3' : 'mt-8')}>
         <div className="min-w-0">
-          <p className={cn('trackdocs-text-metric leading-none', compact ? 'text-[clamp(2.65rem,3vw,3.45rem)]' : 'text-[clamp(3.2rem,4.3vw,4.5rem)]')}>
+          <p className={cn('trackdocs-text-metric leading-none', compact ? 'text-[clamp(2.2rem,2.5vw,2.8rem)]' : 'text-[clamp(3.2rem,4.3vw,4.5rem)]')}>
             {value}
           </p>
-          <p className={cn('trackdocs-text-body max-w-[18rem]', compact ? 'mt-3' : 'mt-4')}>{description}</p>
+          <p className={cn('trackdocs-text-body max-w-[18rem]', compact ? 'mt-2 text-[0.85rem]' : 'mt-4')}>{description}</p>
         </div>
         <div className={cn('flex items-center justify-center self-start rounded-full border shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]', compact ? '-mt-2 h-[4rem] w-[4rem]' : '-mt-1 h-[4.5rem] w-[4.5rem]', stampToneMap[tone])}>
           <div className={cn('flex items-center justify-center rounded-full border border-current/15 bg-white/72', compact ? 'h-11 w-11' : 'h-12 w-12')}>

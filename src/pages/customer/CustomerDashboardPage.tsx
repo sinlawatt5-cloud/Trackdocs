@@ -49,7 +49,7 @@ function ShipmentListCard({ shipment }: { shipment: Shipment }) {
   const statusLabel = shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'
 
   return (
-    <Card tone="glass" padding="md" className="trackdocs-card-module flex min-h-[390px] flex-col border-[rgba(15,23,42,0.08)] p-6 sm:p-7">
+    <Card tone="glass" padding="md" className="trackdocs-card-module flex min-h-[280px] flex-col border-[rgba(15,23,42,0.08)] p-5 sm:p-6">
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-3">
           <span className="trackdocs-card-badge px-3 py-1.5 text-[var(--td-text-muted)]">
@@ -228,6 +228,7 @@ export function CustomerDashboardPage() {
 
   return (
     <AppShell
+      density="compact"
       title="ภาพรวมการทำงาน"
       subtitle={`ติดตามสถานะงานจัดส่ง เอกสาร และการดำเนินงานของบริษัท ${session.customerCode ?? '-'} แบบเรียลไทม์`}
       actions={
@@ -257,8 +258,8 @@ export function CustomerDashboardPage() {
         <ErrorState message={error} onRetry={() => window.location.reload()} />
       ) : (
         <div className="trackdocs-page-entrance trackdocs-customer-dashboard-grid">
-          <section className="space-y-5 xl:space-y-6">
-            <div className="trackdocs-stagger-list grid items-stretch gap-5 md:grid-cols-3">
+          <section className="space-y-4 xl:space-y-4">
+            <div className="trackdocs-stagger-list grid items-stretch gap-4 md:grid-cols-3">
               {stats.map((stat) => (
                 <StatCard key={stat.label} {...stat} compact />
               ))}
@@ -354,11 +355,11 @@ export function CustomerDashboardPage() {
                   ))}
                 </div>
 
-                <Card tone="glass" padding="none" className="trackdocs-entrance trackdocs-latest-shipments-card hidden overflow-hidden rounded-[26px] md:block">
-                  <div className="flex items-start justify-between gap-4 border-b border-[rgba(15,23,42,0.08)] px-6 py-5">
+                <Card tone="glass" padding="none" className="trackdocs-entrance trackdocs-latest-shipments-card hidden overflow-hidden rounded-[24px] md:block">
+                  <div className="flex items-start justify-between gap-3 border-b border-[rgba(15,23,42,0.08)] px-5 py-4">
                     <div className="flex items-start gap-3">
                       <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[rgba(15,23,42,0.1)] bg-[rgba(255,255,255,0.78)] text-[var(--td-text-muted)]">
-                        <CalendarDays className="h-5 w-5" />
+                        <CalendarDays className="h-4 w-4" />
                       </div>
                       <div>
                         <p className="trackdocs-text-section-title">รายการจัดส่งล่าสุด</p>
@@ -377,13 +378,13 @@ export function CustomerDashboardPage() {
                     <table className="min-w-full border-separate border-spacing-0">
                       <thead>
                         <tr className="bg-[rgba(255,255,255,0.78)] text-left trackdocs-text-table-head text-[var(--td-text-muted)]">
-                          <th className="px-5 py-4">tracking no</th>
-                          <th className="px-5 py-4">วันที่ส่ง</th>
-                          <th className="px-5 py-4">จำนวนซอง</th>
-                          <th className="px-5 py-4">หมายเหตุลูกค้า</th>
-                          <th className="px-5 py-4">สถานะ</th>
-                          <th className="px-5 py-4">สร้างเมื่อ</th>
-                          <th className="px-5 py-4 text-right">action</th>
+                          <th className="px-4 py-3">tracking no</th>
+                          <th className="px-4 py-3">วันที่ส่ง</th>
+                          <th className="px-4 py-3">จำนวนซอง</th>
+                          <th className="px-4 py-3">หมายเหตุลูกค้า</th>
+                          <th className="px-4 py-3">สถานะ</th>
+                          <th className="px-4 py-3">สร้างเมื่อ</th>
+                          <th className="px-4 py-3 text-right">action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -392,31 +393,31 @@ export function CustomerDashboardPage() {
                             key={shipment.shipmentId}
                             className="border-t border-[rgba(15,23,42,0.06)] bg-[rgba(255,255,255,0.72)] align-middle transition hover:bg-[rgba(255,255,255,0.9)]"
                           >
-                            <td className="px-5 py-4">
+                            <td className="px-4 py-3">
                               <div className="space-y-1">
-                                <p className="trackdocs-text-body-strong text-[1.18rem]">
+                                <p className="trackdocs-text-body-strong text-[1rem]">
                                   {shipment.trackingNo}
                                 </p>
                                 <p className="trackdocs-text-caption text-[var(--td-text-muted)]">{shipment.customerCode}</p>
                               </div>
                             </td>
-                            <td className="px-5 py-4 trackdocs-text-body">{formatDate(shipment.sentDate)}</td>
-                            <td className="px-5 py-4 trackdocs-text-body-strong">
+                            <td className="px-4 py-3 trackdocs-text-body">{formatDate(shipment.sentDate)}</td>
+                            <td className="px-4 py-3 trackdocs-text-body-strong">
                               {shipment.envelopeCount}
                             </td>
-                            <td className="max-w-[300px] px-5 py-4 trackdocs-text-body text-[var(--td-text-strong)]">
+                            <td className="max-w-[300px] px-4 py-3 trackdocs-text-body text-[var(--td-text-strong)]">
                               {shipment.customerNote || '-'}
                             </td>
-                            <td className="px-5 py-4">
+                            <td className="px-4 py-3">
                               <StatusBadge
                                 status={shipment.status}
                                 label={shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'}
                               />
                             </td>
-                            <td className="px-5 py-4 trackdocs-text-body">
+                            <td className="px-4 py-3 trackdocs-text-body">
                               {formatDateTime(shipment.createdAt)}
                             </td>
-                            <td className="px-5 py-4 text-right">
+                            <td className="px-4 py-3 text-right">
                               <Link
                                 to={`/shipments/${shipment.shipmentId}`}
                                 state={{ shipment }}
@@ -436,19 +437,19 @@ export function CustomerDashboardPage() {
             )}
           </section>
 
-          <aside className="trackdocs-stagger-list space-y-5 xl:sticky xl:top-8">
-            <Card tone="glass" padding="md" className="trackdocs-side-filter-module trackdocs-side-module rounded-[26px] p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#eff8c9_0%,#d7ea49_100%)] text-[#8aa200] shadow-[0_14px_24px_rgba(215,234,73,0.14)]">
-                  <Search className="h-5 w-5" />
+          <aside className="trackdocs-stagger-list space-y-4 xl:sticky xl:top-4">
+            <Card tone="glass" padding="md" className="trackdocs-side-filter-module trackdocs-side-module rounded-[20px] p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#eff8c9_0%,#d7ea49_100%)] text-[#8aa200] shadow-[0_14px_24px_rgba(215,234,73,0.14)]">
+                  <Search className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="trackdocs-text-section-title">ค้นหาและกรองรายการ</p>
-                  <p className="mt-1 trackdocs-text-body">ค้นหา trackingNo, กรองสถานะ และเลือกวันที่ส่งได้จากที่นี่</p>
+                  <p className="trackdocs-text-section-title text-[1rem]">ค้นหาและกรองรายการ</p>
+                  <p className="mt-0.5 trackdocs-text-body text-[0.8rem] leading-snug">ค้นหา trackingNo, กรองสถานะ และเลือกวันที่ส่งได้จากที่นี่</p>
                 </div>
               </div>
 
-              <div className="mt-5 flex flex-col gap-2">
+              <div className="mt-4 grid gap-2 grid-cols-2">
                 {statusOptions.map((option) => (
                   <button
                     key={option.value}
@@ -456,8 +457,8 @@ export function CustomerDashboardPage() {
                     onClick={() => setStatus(option.value)}
                     className={
                       option.value === status
-                        ? 'trackdocs-button-primary w-full rounded-full px-4 py-3 text-sm font-semibold'
-                        : 'trackdocs-pill trackdocs-pill-soft w-full justify-center rounded-full px-4 py-3 text-sm font-semibold text-[var(--td-text-muted)]'
+                        ? 'trackdocs-button-primary w-full rounded-[16px] px-3 py-2 text-[0.85rem] font-semibold'
+                        : 'trackdocs-pill trackdocs-pill-soft w-full justify-center rounded-[16px] px-3 py-2 text-[0.85rem] font-semibold text-[var(--td-text-muted)]'
                     }
                   >
                     {option.label}
@@ -465,7 +466,7 @@ export function CustomerDashboardPage() {
                 ))}
               </div>
 
-              <div className="mt-5 grid gap-4">
+              <div className="mt-4 grid gap-3">
                 <Input
                   id="customer-dashboard-side-search"
                   label="ค้นหา trackingNo"
@@ -486,7 +487,7 @@ export function CustomerDashboardPage() {
               </div>
 
               {hasFilters ? (
-                <div className="mt-5 rounded-[18px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.68)] p-4 trackdocs-text-body">
+                <div className="mt-4 rounded-[16px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.68)] p-3 trackdocs-text-body text-[0.85rem]">
                   <p>พบรายการที่ตรงเงื่อนไข {filteredShipments.length} รายการ</p>
                   <Button
                     type="button"
@@ -496,7 +497,7 @@ export function CustomerDashboardPage() {
                       setStatus('all')
                       setDate('')
                     }}
-                    className="mt-3 w-full rounded-full px-4 py-2 text-sm font-semibold"
+                    className="mt-2 w-full rounded-full px-3 py-1.5 text-[0.85rem] font-semibold"
                   >
                     ล้างตัวกรอง
                   </Button>
@@ -504,16 +505,16 @@ export function CustomerDashboardPage() {
               ) : null}
             </Card>
 
-            <Card tone="glass" padding="md" className="hidden trackdocs-side-module rounded-[26px] p-6">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(215,234,73,0.18)] text-[#8aa200]">
-                  <TrendingUp className="h-5 w-5" />
+            <Card tone="glass" padding="md" className="hidden trackdocs-side-module rounded-[20px] p-4">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(215,234,73,0.18)] text-[#8aa200]">
+                  <TrendingUp className="h-4 w-4" />
                 </div>
-                <p className="trackdocs-text-section-title text-[1.25rem]">สรุปวันนี้</p>
+                <p className="trackdocs-text-section-title text-[1.15rem]">สรุปวันนี้</p>
               </div>
               <div className="divide-y divide-[rgba(15,23,42,0.08)]">
                 {todaySummary.map((item) => (
-                  <div key={item.label} className="flex items-center justify-between py-4 trackdocs-text-body">
+                  <div key={item.label} className="flex items-center justify-between py-3 trackdocs-text-body text-[0.9rem]">
                     <span>{item.label}</span>
                     <span className="trackdocs-text-body-strong">{item.value}</span>
                   </div>
@@ -521,30 +522,30 @@ export function CustomerDashboardPage() {
               </div>
             </Card>
 
-            <Card tone="glass" padding="md" className="hidden trackdocs-side-module trackdocs-side-module-tall rounded-[26px] p-6">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(43,199,232,0.16)] text-[#1599b6]">
-                  <TrendingUp className="h-5 w-5" />
+            <Card tone="glass" padding="md" className="hidden trackdocs-side-module trackdocs-side-module-tall rounded-[20px] p-4">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(43,199,232,0.16)] text-[#1599b6]">
+                  <TrendingUp className="h-4 w-4" />
                 </div>
-                <p className="trackdocs-text-section-title text-[1.25rem]">กิจกรรมล่าสุด</p>
+                <p className="trackdocs-text-section-title text-[1.15rem]">กิจกรรมล่าสุด</p>
               </div>
               <div className="space-y-4">
                 {recentActivity.length > 0 ? (
                   recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex gap-3 border-b border-[rgba(15,23,42,0.07)] pb-4 last:border-b-0 last:pb-0">
+                    <div key={activity.id} className="flex gap-3 border-b border-[rgba(15,23,42,0.07)] pb-3 last:border-b-0 last:pb-0">
                       <div
                         className={
                           activity.tone === 'green'
-                            ? 'mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(53,201,126,0.18)] text-[#1fa45f]'
-                            : 'mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(43,199,232,0.16)] text-[#1599b6]'
+                            ? 'mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[rgba(53,201,126,0.18)] text-[#1fa45f]'
+                            : 'mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[rgba(43,199,232,0.16)] text-[#1599b6]'
                         }
                       >
-                        {activity.tone === 'green' ? <CheckCircle2 className="h-5 w-5" /> : <Send className="h-5 w-5" />}
+                        {activity.tone === 'green' ? <CheckCircle2 className="h-4 w-4" /> : <Send className="h-4 w-4" />}
                       </div>
                       <div className="min-w-0">
-                        <p className="trackdocs-text-body-strong">{activity.title}</p>
-                        <p className="trackdocs-text-body">{activity.trackingNo}</p>
-                        <p className="trackdocs-text-helper">{activity.date}</p>
+                        <p className="trackdocs-text-body-strong text-[0.9rem]">{activity.title}</p>
+                        <p className="trackdocs-text-body text-[0.85rem]">{activity.trackingNo}</p>
+                        <p className="trackdocs-text-helper text-xs">{activity.date}</p>
                       </div>
                     </div>
                   ))

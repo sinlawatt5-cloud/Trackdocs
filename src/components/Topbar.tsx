@@ -9,9 +9,10 @@ interface TopbarProps {
   title: string
   subtitle?: string
   onSignOut: () => void
+  compact?: boolean
 }
 
-export function Topbar({ session, title, subtitle, onSignOut }: TopbarProps) {
+export function Topbar({ session, title, subtitle, onSignOut, compact = false }: TopbarProps) {
   return (
     <header className={motion.card + ' trackdocs-card trackdocs-card-strong trackdocs-entrance rounded-[34px] px-6 py-6 sm:px-8 sm:py-8'}>
       <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
@@ -46,7 +47,11 @@ export function Topbar({ session, title, subtitle, onSignOut }: TopbarProps) {
           <button
             type="button"
             onClick={onSignOut}
-            className="trackdocs-button-secondary inline-flex items-center gap-2 rounded-[18px] px-4 py-2.5 text-sm font-semibold"
+            className={
+              compact
+                ? 'inline-flex items-center gap-2 rounded-full bg-[#e11d48] text-white px-3.5 py-2 text-[0.85rem] font-bold shadow-[0_4px_14px_rgba(225,29,72,0.3)] transition-transform hover:scale-105 hover:bg-[#be123c]'
+                : 'inline-flex items-center gap-2 rounded-full bg-[#e11d48] text-white px-4 py-2.5 text-sm font-bold shadow-[0_4px_14px_rgba(225,29,72,0.3)] transition-transform hover:scale-105 hover:bg-[#be123c]'
+            }
           >
             <LogOut className="h-4 w-4" />
             Sign out

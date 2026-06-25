@@ -163,8 +163,8 @@ export function AdminReportsPage() {
   }
 
   return (
-    <AppShell title="Reports" subtitle="Understand proof flow and export filtered records." actions={pageActions}>
-      <div className="trackdocs-page-entrance space-y-6">
+    <AppShell title="Reports" subtitle="Understand proof flow and export filtered records." density="compact" actions={pageActions}>
+      <div className="trackdocs-page-entrance space-y-4">
         <div className="trackdocs-stagger-list grid gap-4 md:grid-cols-3">
           {stats.map((stat) => (
             <StatCard key={stat.label} {...stat} />
@@ -274,9 +274,9 @@ export function AdminReportsPage() {
           ))}
         </div>
 
-        <div className="trackdocs-entrance trackdocs-card trackdocs-card-strong trackdocs-card-module hidden overflow-hidden lg:block">
-          <table className="min-w-full divide-y divide-[rgba(17,17,17,0.08)]">
-            <thead className="bg-[rgba(249,247,241,0.96)]">
+        <div className="trackdocs-entrance trackdocs-card trackdocs-card-strong trackdocs-card-module hidden overflow-y-auto lg:block max-h-[calc(100vh-420px)]">
+          <table className="min-w-full divide-y divide-[rgba(17,17,17,0.08)] relative">
+            <thead className="bg-[rgba(249,247,241,0.96)] sticky top-0 z-10">
               <tr>
                 <th className="px-5 py-4 text-left trackdocs-text-badge text-[var(--td-text-muted)]">
                   Tracking

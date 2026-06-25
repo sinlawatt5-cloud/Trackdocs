@@ -1,7 +1,6 @@
 import {
   BarChart3,
   Building2,
-  ClipboardList,
   FilePlus2,
   LayoutDashboard,
   ShieldCheck,
@@ -25,7 +24,6 @@ const navigationByRole: Record<Role, { label: string; to: string; icon: ReactNod
   ],
   operation: [
     { label: 'Dashboard', to: '/operation/dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
-    { label: 'Shipments', to: '/operation/dashboard', icon: <ClipboardList className="h-4 w-4" /> },
   ],
   admin: [
     { label: 'Dashboard', to: '/admin/dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
@@ -39,8 +37,8 @@ export function Sidebar({ session }: SidebarProps) {
   const links = navigationByRole[session.role]
 
   return (
-    <aside className="trackdocs-sidebar flex flex-col gap-5 p-4 lg:sticky lg:top-0 lg:h-[100dvh] lg:rounded-none lg:p-5">
-      <div className="trackdocs-signal-panel trackdocs-entrance rounded-[30px] border border-[var(--td-sidebar-border)] bg-[rgba(255,255,255,0.04)] p-5 text-[var(--td-sidebar-text)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+    <aside className="trackdocs-sidebar flex flex-col gap-6 p-4 lg:sticky lg:top-0 lg:h-[100dvh] lg:rounded-none lg:p-6 lg:pr-5">
+      <div className="trackdocs-signal-panel trackdocs-entrance rounded-[28px] border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5 text-[var(--td-sidebar-text)] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
         <div className="flex items-center gap-3">
           <div className="trackdocs-brand-mark relative flex h-[46px] w-[46px] items-center justify-center text-[#172008]">
             <svg
@@ -74,20 +72,20 @@ export function Sidebar({ session }: SidebarProps) {
             </p>
           </div>
         </div>
-        <div className="mt-5 rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.06)] px-4 py-3.5">
-          <p className="trackdocs-sidebar-label">
-            Signed in as
+        <div className="mt-5 rounded-[20px] border border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.04)] px-4 py-3.5">
+          <p className="text-[0.65rem] font-bold uppercase tracking-[0.15em] text-[rgba(255,255,255,0.4)]">
+            SIGNED IN AS
           </p>
-          <p className="mt-2 trackdocs-sidebar-nav text-white">{session.displayName}</p>
-          <p className="mt-1 trackdocs-sidebar-body text-[var(--td-sidebar-muted)]">{roleLabels[session.role]}</p>
+          <p className="mt-1.5 text-sm font-bold text-white tracking-wide">{session.displayName}</p>
+          <p className="mt-0.5 text-[0.8rem] text-[rgba(255,255,255,0.6)]">{roleLabels[session.role]}</p>
         </div>
       </div>
 
-      <div className="px-1">
-        <p className="trackdocs-sidebar-label mb-3">Main</p>
+      <div className="px-2">
+        <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[rgba(255,255,255,0.6)]">MAIN</p>
       </div>
 
-      <nav className="trackdocs-stagger-list flex gap-2 overflow-x-auto pb-1 lg:-mt-1 lg:flex-1 lg:flex-col lg:gap-2 lg:overflow-y-auto lg:overflow-x-hidden">
+      <nav className="trackdocs-stagger-list flex gap-2 overflow-x-auto pb-1 lg:-mt-1 lg:flex-1 lg:flex-col lg:gap-2 lg:overflow-visible">
         {links.map((item) => (
           <NavLink
             key={item.to + item.label}
@@ -96,30 +94,41 @@ export function Sidebar({ session }: SidebarProps) {
               cn(
                 'group ' +
                   motion.sidebarItem +
-                  ' trackdocs-sidebar-nav relative min-w-max flex items-center gap-3 rounded-[22px] border px-4 py-3.5 lg:min-w-0 before:absolute before:inset-y-3 before:left-2 before:w-1 before:rounded-full before:bg-[var(--td-primary)] before:content-[\'\'] before:opacity-0 before:transition-opacity before:duration-300',
+                  ' trackdocs-sidebar-nav trackdocs-sidebar-nav-item relative min-w-max flex items-center gap-3.5 px-5 py-3 lg:min-w-0 lg:w-full',
                 isActive
-                  ? 'border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.06)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] before:opacity-100'
-                  : 'border-transparent bg-transparent text-[var(--td-sidebar-muted)] hover:border-[rgba(255,255,255,0.08)] hover:bg-white/6 hover:text-white hover:before:opacity-40',
+                  ? 'trackdocs-sidebar-nav-item--active text-[#111216] font-bold'
+                  : 'trackdocs-sidebar-nav-item--inactive text-[rgba(255,255,255,0.6)] hover:text-white font-medium',
               )
             }
           >
-            <span className="text-current transition group-hover:translate-x-0.5">{item.icon}</span>
-            {item.label}
+            {({ isActive }) => (
+              <>
+                <span
+                  className={cn(
+                    "trackdocs-sidebar-nav-indicator absolute inset-y-3 left-2.5 w-[3px] rounded-full transition-opacity duration-300 z-10",
+                    isActive ? "opacity-100 bg-[#D7EA49] shadow-[0_0_8px_rgba(215,234,73,0.4)]" : "opacity-0 group-hover:opacity-40 bg-[var(--td-primary)]"
+                  )}
+                  aria-hidden="true"
+                />
+                <span className={cn("relative z-10 flex items-center justify-center transition group-hover:translate-x-0.5", isActive ? "text-[#111216]" : "text-current")}>{item.icon}</span>
+                <span className="relative z-10 text-[0.9rem] tracking-wide">{item.label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="rounded-[26px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.05)] p-4 text-sm text-[var(--td-sidebar-muted)]">
-        <div className="flex items-center gap-2">
-          <span className={cn(motion.status, 'trackdocs-status-dot h-2.5 w-2.5 rounded-full bg-[var(--td-primary)] shadow-[0_0_0_4px_rgba(215,234,73,0.1)]')} />
-          <p className="trackdocs-sidebar-nav text-white">Workspace status</p>
+      <div className="mt-auto rounded-[28px] border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5 text-sm text-[var(--td-sidebar-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+        <div className="flex items-center gap-2.5">
+          <span className={cn(motion.status, 'trackdocs-status-dot h-2.5 w-2.5 rounded-full bg-[#D7EA49] shadow-[0_0_8px_rgba(215,234,73,0.3)]')} />
+          <p className="font-bold text-white tracking-wide text-[0.9rem]">Workspace status</p>
         </div>
-        <p className="trackdocs-sidebar-body mt-2 leading-6">
+        <p className="mt-3 leading-relaxed text-[0.85rem] text-[rgba(255,255,255,0.6)]">
           Status changes are only allowed for operation. Customers can create records but cannot edit received state.
         </p>
         <button
           type="button"
-          className="trackdocs-button-secondary mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[18px] px-4 py-3 text-sm font-semibold"
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#f4f1eb] px-4 py-2.5 text-[0.85rem] font-bold text-[#111216] transition-transform hover:scale-[0.98] hover:bg-white"
         >
           View status
         </button>

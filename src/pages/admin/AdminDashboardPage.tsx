@@ -90,6 +90,7 @@ export function AdminDashboardPage() {
     <AppShell
       title="ศูนย์ควบคุมระบบ"
       subtitle="ดูภาพรวมลูกค้า ผู้ใช้งาน และรายงานล่าสุด พร้อมควบคุมสิทธิ์โดยไม่เปิดเผยข้อมูลเกินจำเป็น"
+      density="compact"
       actions={
         <>
           <div>
@@ -121,8 +122,8 @@ export function AdminDashboardPage() {
         </>
       }
     >
-      <div className="trackdocs-page-entrance space-y-6">
-        <div className="trackdocs-stagger-list grid items-start gap-5 md:grid-cols-3">
+      <div className="trackdocs-page-entrance space-y-4">
+        <div className="trackdocs-stagger-list grid items-start gap-4 md:grid-cols-3">
           {stats.map((stat) => (
             <StatCard key={stat.label} {...stat} />
           ))}
@@ -130,7 +131,7 @@ export function AdminDashboardPage() {
 
         <div className="trackdocs-entrance">
           <h2 className="mb-4 text-lg font-semibold text-[var(--td-text-strong)]">Recent shipments</h2>
-          <ShipmentTable shipments={shipments.slice(0, 10)} />
+          <ShipmentTable shipments={shipments.slice(0, 5)} />
         </div>
       </div>
     </AppShell>
