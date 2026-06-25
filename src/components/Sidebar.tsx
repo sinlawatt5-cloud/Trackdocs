@@ -103,13 +103,7 @@ export function Sidebar({ session }: SidebarProps) {
           >
             {({ isActive }) => (
               <>
-                <span
-                  className={cn(
-                    "trackdocs-sidebar-nav-indicator absolute inset-y-3 left-2.5 w-[3px] rounded-full transition-opacity duration-300 z-10",
-                    isActive ? "opacity-100 bg-[#D7EA49] shadow-[0_0_8px_rgba(215,234,73,0.4)]" : "opacity-0 group-hover:opacity-40 bg-[var(--td-primary)]"
-                  )}
-                  aria-hidden="true"
-                />
+
                 <span className={cn("relative z-10 flex items-center justify-center transition group-hover:translate-x-0.5", isActive ? "text-[#111216]" : "text-current")}>{item.icon}</span>
                 <span className="relative z-10 text-[0.9rem] tracking-wide">{item.label}</span>
               </>
