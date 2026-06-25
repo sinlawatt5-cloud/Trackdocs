@@ -5,10 +5,10 @@
 @tailwind utilities;
 
 :root {
-  --font-display: 'Bai Jamjuree', 'Anuphan', 'Noto Sans Thai', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Noto Sans Thai', 'Anuphan', 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'LINE Seed Sans TH', 'IBM Plex Sans Thai', 'Noto Sans Thai', 'Bai Jamjuree', 'Anuphan', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'LINE Seed Sans TH', 'IBM Plex Sans Thai', 'Noto Sans Thai', Inter, 'Manrope', ui-sans-serif, system-ui, sans-serif;
   --font-thai: var(--font-body);
-  --font-latin: 'Manrope', 'Bai Jamjuree', 'Anuphan', ui-sans-serif, system-ui, sans-serif;
+  --font-latin: Inter, 'Manrope', 'Bai Jamjuree', ui-sans-serif, system-ui, sans-serif;
   --font-ui: var(--font-body);
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
   --text-xs: 0.75rem;

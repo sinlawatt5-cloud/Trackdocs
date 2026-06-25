@@ -39,8 +39,8 @@ export function Sidebar({ session }: SidebarProps) {
   return (
     <aside className="trackdocs-sidebar flex flex-col gap-6 p-4 lg:sticky lg:top-0 lg:h-[100dvh] lg:rounded-none lg:p-6 lg:pr-5">
       <div className="trackdocs-signal-panel trackdocs-entrance rounded-[28px] border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5 text-[var(--td-sidebar-text)] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-        <div className="flex items-center gap-3">
-          <div className="trackdocs-brand-mark relative flex h-[46px] w-[46px] items-center justify-center text-[#172008]">
+        <div className="flex items-center gap-[14px]">
+          <div className="trackdocs-brand-mark relative flex h-[46px] w-[46px] shrink-0 items-center justify-center text-[#172008]">
             <svg
               viewBox="0 0 48 48"
               className="absolute inset-0 h-full w-full drop-shadow-[0_10px_18px_rgba(0,0,0,0.14)]"
@@ -66,26 +66,26 @@ export function Sidebar({ session }: SidebarProps) {
             </svg>
             <ShieldCheck className="relative z-[1] h-[18px] w-[18px] stroke-[2.5]" />
           </div>
-          <div className="min-w-0">
-            <p className="trackdocs-brand-title text-[1.45rem] uppercase tracking-[0.08em] text-[var(--td-sidebar-text)]">
+          <div className="min-w-0 flex-1">
+            <p className="text-[13.5px] font-[800] uppercase tracking-[0.04em] text-[var(--td-sidebar-text)]" style={{ transform: "translateY(1px)" }}>
               TRACKDOCS
             </p>
           </div>
         </div>
-        <div className="mt-5 rounded-[20px] border border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.04)] px-4 py-3.5">
-          <p className="text-[0.65rem] font-bold uppercase tracking-[0.15em] text-[rgba(255,255,255,0.4)]">
+        <div className="mt-6 rounded-[18px] border border-[rgba(255,255,255,0.04)] bg-[rgba(255,255,255,0.025)] p-4">
+          <p className="text-[10.5px] font-[800] uppercase tracking-[0.14em] text-[rgba(255,255,255,0.35)]">
             SIGNED IN AS
           </p>
-          <p className="mt-1.5 text-sm font-bold text-white tracking-wide">{session.displayName}</p>
-          <p className="mt-0.5 text-[0.8rem] text-[rgba(255,255,255,0.6)]">{roleLabels[session.role]}</p>
+          <p className="mt-2 text-[14.5px] font-[800] text-white tracking-[0.01em]">{session.displayName}</p>
+          <p className="mt-0.5 text-[12.5px] font-[500] leading-[1.4] text-[rgba(255,255,255,0.55)]">{roleLabels[session.role]}</p>
         </div>
       </div>
 
-      <div className="px-2">
-        <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[rgba(255,255,255,0.6)]">MAIN</p>
+      <div className="px-3">
+        <p className="text-[10.5px] font-[800] uppercase tracking-[0.16em] text-[rgba(255,255,255,0.45)]">MAIN</p>
       </div>
 
-      <nav className="trackdocs-stagger-list flex gap-2 overflow-x-auto pb-1 lg:-mt-1 lg:flex-1 lg:flex-col lg:gap-2 lg:overflow-visible">
+      <nav className="trackdocs-stagger-list flex gap-2 overflow-x-auto pb-1 lg:-mt-1 lg:flex-1 lg:flex-col lg:gap-[9px] lg:overflow-visible">
         {links.map((item) => (
           <NavLink
             key={item.to + item.label}
@@ -94,35 +94,35 @@ export function Sidebar({ session }: SidebarProps) {
               cn(
                 'group ' +
                   motion.sidebarItem +
-                  ' trackdocs-sidebar-nav trackdocs-sidebar-nav-item relative min-w-max flex items-center gap-3.5 px-5 py-3 lg:min-w-0 lg:w-full',
+                  ' trackdocs-sidebar-nav trackdocs-sidebar-nav-item relative min-w-max flex items-center gap-3 px-4 h-[46px] lg:min-w-0 lg:w-full transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
                 isActive
-                  ? 'trackdocs-sidebar-nav-item--active text-[#111216] font-bold'
-                  : 'trackdocs-sidebar-nav-item--inactive text-[rgba(255,255,255,0.6)] hover:text-white font-medium',
+                  ? 'trackdocs-sidebar-nav-item--active text-[#111216] font-[800]'
+                  : 'trackdocs-sidebar-nav-item--inactive text-[rgba(255,255,255,0.55)] hover:text-[rgba(255,255,255,0.9)] font-[700]',
               )
             }
           >
             {({ isActive }) => (
               <>
 
-                <span className={cn("relative z-10 flex items-center justify-center transition group-hover:translate-x-0.5", isActive ? "text-[#111216]" : "text-current")}>{item.icon}</span>
-                <span className="relative z-10 text-[0.9rem] tracking-wide">{item.label}</span>
+                <span className={cn("relative z-10 flex items-center justify-center transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] [&>svg]:w-[16px] [&>svg]:h-[16px]", isActive ? "text-[#111216]" : "text-current group-hover:translate-x-[1px]")}>{item.icon}</span>
+                <span className="relative z-10 text-[14px] leading-none tracking-[0.015em] transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[1px]">{item.label}</span>
               </>
             )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="mt-auto rounded-[28px] border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5 text-sm text-[var(--td-sidebar-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+      <div className="mt-auto rounded-[24px] border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-[22px] text-sm text-[var(--td-sidebar-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
         <div className="flex items-center gap-2.5">
-          <span className={cn(motion.status, 'trackdocs-status-dot h-2.5 w-2.5 rounded-full bg-[#D7EA49] shadow-[0_0_8px_rgba(215,234,73,0.3)]')} />
-          <p className="font-bold text-white tracking-wide text-[0.9rem]">Workspace status</p>
+          <span className={cn(motion.status, 'trackdocs-status-dot h-[9px] w-[9px] rounded-full bg-[#D7EA49] shadow-[0_0_8px_rgba(215,234,73,0.3)]')} />
+          <p className="text-[14.5px] font-[800] leading-[1.25] text-white tracking-[0.01em]">Workspace status</p>
         </div>
-        <p className="mt-3 leading-relaxed text-[0.85rem] text-[rgba(255,255,255,0.6)]">
+        <p className="mt-3 text-[12.5px] leading-[1.6] text-[rgba(255,255,255,0.6)]">
           Status changes are only allowed for operation. Customers can create records but cannot edit received state.
         </p>
         <button
           type="button"
-          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#f4f1eb] px-4 py-2.5 text-[0.85rem] font-bold text-[#111216] transition-transform hover:scale-[0.98] hover:bg-white"
+          className="mt-[22px] flex h-[42px] w-full items-center justify-center gap-2 rounded-full bg-[#f4f1eb] px-4 text-[13.5px] font-[800] leading-none text-[#111216] transition-all duration-150 hover:scale-[0.985] hover:bg-white active:scale-[0.97]"
         >
           View status
         </button>
