@@ -51,31 +51,24 @@ export function StatCard({ label, value, description, tone, trend, isLive, compa
     <div
       className={cn(
         'trackdocs-card trackdocs-card-strong trackdocs-signal-panel relative flex flex-col justify-between self-stretch overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]',
-        // Mobile compact layout (120px-128px), Desktop large layout
-        'min-h-[124px] rounded-[22px] p-3.5 lg:min-h-[276px] lg:rounded-[30px] lg:p-7 xl:p-8 border border-[rgba(0,0,0,0.03)] bg-white/90 shadow-[0_4px_16px_rgba(0,0,0,0.02),inset_0_1px_1px_rgba(255,255,255,1)]',
+        // Mobile compact layout (for 3 columns), Desktop large layout
+        'min-h-[90px] rounded-[16px] p-2.5 sm:p-3 lg:min-h-[276px] lg:rounded-[30px] lg:p-7 xl:p-8 border border-[rgba(0,0,0,0.03)] bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.02),inset_0_1px_1px_rgba(255,255,255,1)]',
         // Desktop uses toneMap background colors
         toneMap[tone],
       )}
     >
       {/* --- MOBILE LAYOUT --- */}
-      <div className="flex h-full flex-col lg:hidden">
-        <div className="flex items-center justify-between mb-2">
-          <div className={cn('flex h-8 w-8 items-center justify-center rounded-full border shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]', stampToneMap[tone])}>
-            <div className="flex h-6 w-6 items-center justify-center rounded-full border border-current/15 bg-white/72">
-              <Icon className="h-3.5 w-3.5" strokeWidth={2.5} />
+      <div className="flex h-full flex-col lg:hidden relative">
+        <div className="flex items-start justify-between">
+          <div className={cn('flex h-6 w-6 shrink-0 items-center justify-center rounded-full border shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]', stampToneMap[tone])}>
+            <div className="flex h-4 w-4 items-center justify-center rounded-full border border-current/15 bg-white/72">
+              <Icon className="h-2.5 w-2.5" strokeWidth={2.5} />
             </div>
           </div>
-          {isLive && (
-            <span className="rounded-[6px] bg-[#D7EA49] px-1.5 py-0.5 text-[8.5px] font-[800] tracking-wider text-[#172008] shadow-[0_2px_4px_rgba(215,234,73,0.3)]">
-              LIVE
-            </span>
-          )}
+          <span className="text-[10px] sm:text-[11px] font-[700] text-[var(--td-text-muted)] text-right leading-tight max-w-[65%] break-words mt-0.5 mr-1">{label}</span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[11px] font-[700] text-[var(--td-text-muted)] mb-0.5">{label}</span>
-          <div className="flex items-baseline gap-1.5">
-            <p className="text-[28px] font-[900] leading-none tracking-tight text-[var(--td-text-strong)]">{value}</p>
-          </div>
+        <div className="flex-1 flex items-center justify-center pt-1.5 pb-0.5">
+          <p className="text-[22px] sm:text-[24px] font-[900] leading-none tracking-tight text-[var(--td-text-strong)]">{value}</p>
         </div>
       </div>
 

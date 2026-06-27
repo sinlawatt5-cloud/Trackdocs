@@ -26,10 +26,17 @@ export function StatusBadge({ status, label, tone = 'slate' }: StatusBadgeProps)
       className={cn(
         motion.status,
         'trackdocs-proof-stamp px-3 py-1.5',
-        toneClasses[resolvedTone],
+        toneClasses[resolvedTone]
       )}
     >
-      <span className="trackdocs-proof-stamp-dot trackdocs-status-dot" aria-hidden="true" />
+      <span 
+        className={cn(
+          "trackdocs-proof-stamp-dot trackdocs-status-dot",
+          // Red radar ping dot on mobile, revert on desktop
+          status === 'RECEIVED' && 'animate-radar-ping md:animate-none !bg-[#e11d48] md:!bg-[rgba(15,23,42,0.34)]'
+        )} 
+        aria-hidden="true" 
+      />
       {resolvedLabel}
     </span>
   )

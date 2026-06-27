@@ -24,22 +24,33 @@ export function Topbar({ session, title, subtitle, onSignOut, compact = false }:
             TrackDocs
           </div>
           
-          <h1 className="text-[32px] font-black leading-tight tracking-tight text-[var(--td-text-strong)] lg:trackdocs-text-page-title lg:trackdocs-balance lg:max-w-4xl lg:text-[clamp(2.1rem,3.4vw,3.6rem)]">
-            {title}
-          </h1>
-          
-          <div className="mt-1 flex items-center justify-between lg:mt-0 lg:justify-start">
-            {subtitle ? (
-              <p className="text-[12px] font-medium leading-relaxed text-[var(--td-text-muted)] lg:trackdocs-text-body lg:max-w-3xl lg:text-[1rem] sm:text-[1.02rem]">
-                {subtitle}
-              </p>
-            ) : null}
-            {/* Mobile Date Pill */}
-            <div className="flex items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.06)] bg-[rgba(255,255,255,0.7)] px-2.5 py-1 text-[11px] font-medium text-[var(--td-text-strong)] shadow-[0_1px_2px_rgba(0,0,0,0.02)] lg:hidden">
-              <CalendarDays className="h-3.5 w-3.5 text-[var(--td-text-muted)]" />
-              {format(new Date(), 'E, dd MMM yyyy')}
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-[26px] font-black leading-tight tracking-tight text-[var(--td-text-strong)] lg:trackdocs-text-page-title lg:trackdocs-balance lg:max-w-4xl lg:text-[clamp(2.1rem,3.4vw,3.6rem)]">
+              {title}
+            </h1>
+            {/* Mobile Actions (Date + Logout) */}
+            <div className="flex items-center gap-2 lg:hidden mt-1">
+              <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.06)] bg-white px-2.5 py-1.5 text-[10.5px] font-[700] text-[var(--td-text-strong)] shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                <CalendarDays className="h-3.5 w-3.5 text-[var(--td-text-muted)]" />
+                {format(new Date(), 'd MMM yy')}
+              </div>
+              <button
+                type="button"
+                onClick={onSignOut}
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#e11d48] px-3.5 py-1.5 text-[11px] font-bold text-white shadow-[0_4px_14px_rgba(225,29,72,0.3)] transition-transform active:scale-95 hover:bg-[#be123c]"
+                aria-label="Sign out"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Sign out
+              </button>
             </div>
           </div>
+          
+          {subtitle ? (
+            <p className="mt-1 line-clamp-2 text-[12px] font-medium leading-relaxed text-[var(--td-text-muted)] lg:mt-0 lg:line-clamp-none lg:trackdocs-text-body lg:max-w-3xl lg:text-[1rem] sm:text-[1.02rem]">
+              {subtitle}
+            </p>
+          ) : null}
         </div>
 
         {/* Action Pills - Desktop only (Mobile will have its own action row below) */}

@@ -49,47 +49,44 @@ function ShipmentListCard({ shipment }: { shipment: Shipment }) {
   const statusLabel = shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'
 
   return (
-    <Card tone="glass" padding="md" className="trackdocs-card-module flex min-h-[280px] flex-col border-[rgba(15,23,42,0.08)] p-5 sm:p-6">
+    <Card tone="glass" padding="none" className="trackdocs-card-module flex flex-col rounded-[20px] border border-[rgba(15,23,42,0.05)] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
       <div className="flex items-start justify-between gap-3">
-        <div className="space-y-3">
-          <span className="trackdocs-card-badge px-3 py-1.5 text-[var(--td-text-muted)]">
-            <span className="trackdocs-card-badge-dot" aria-hidden="true" />
-            CUSTOMER
-          </span>
-          <div>
-            <p className="trackdocs-text-badge text-[var(--td-text-muted)]">
-              {shipment.customerCode}
-            </p>
-            <h3 className="trackdocs-text-section-title mt-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="text-[15px] font-[800] tracking-tight text-[var(--td-text-strong)] truncate">
               {shipment.trackingNo}
             </h3>
-            <p className="trackdocs-text-body mt-2">เอกสารของบริษัท {shipment.customerCode}</p>
+            <span className="text-[10px] font-[700] text-[var(--td-text-muted)] bg-[rgba(15,23,42,0.04)] px-2 py-0.5 rounded-full uppercase">
+              {shipment.customerCode}
+            </span>
           </div>
+          <p className="text-[11.5px] font-[600] text-[var(--td-text-muted)] mt-1.5 flex items-center gap-1.5">
+            <CalendarDays className="h-3.5 w-3.5" />
+            {formatDateTime(shipment.createdAt)}
+          </p>
         </div>
         <StatusBadge status={shipment.status} label={statusLabel} />
       </div>
 
-      <div className="mt-6 rounded-[24px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.72)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
-        <p className="trackdocs-text-caption text-[var(--td-text-muted)]">customerNote</p>
-        <p className="trackdocs-text-body mt-3 text-[var(--td-text-strong)]">
-          {shipment.customerNote || 'ไม่มีหมายเหตุ'}
-        </p>
-      </div>
-
-      <div className="trackdocs-card-divider mt-6 pt-4" />
-
-      <div className="mt-auto flex flex-wrap items-center justify-between gap-3 trackdocs-text-body">
-        <div>
-          <p className="trackdocs-text-caption">createdAt</p>
-          <p className="trackdocs-text-body-strong mt-1">{formatDateTime(shipment.createdAt)}</p>
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          {shipment.customerNote ? (
+            <div className="rounded-[12px] bg-[rgba(15,23,42,0.03)] px-3 py-1.5 text-[11.5px] font-[600] text-[var(--td-text-muted)] truncate border border-[rgba(0,0,0,0.02)]">
+              {shipment.customerNote}
+            </div>
+          ) : (
+            <div className="rounded-[12px] bg-[rgba(15,23,42,0.015)] px-3 py-1.5 text-[11px] font-[500] text-[rgba(15,23,42,0.3)] truncate border border-[rgba(0,0,0,0.01)]">
+              ไม่มีหมายเหตุ
+            </div>
+          )}
         </div>
         <Link
           to={`/shipments/${shipment.shipmentId}`}
           state={{ shipment }}
-          className="trackdocs-module-action"
+          className="shrink-0 inline-flex items-center gap-1.5 text-[12px] font-[800] text-[#0891b2] bg-[#f0fbfd] px-3.5 py-2 rounded-full transition-colors active:bg-[#e0f7fc]"
         >
           ดูรายละเอียด
-          <ArrowUpRight className="h-4 w-4" />
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     </Card>
@@ -171,6 +168,8 @@ export function CustomerDashboardPage() {
   }, [date, query, shipments, status])
 
   const stats = useMemo(() => {
+    const today = new Date().toISOString().slice(0, 10)
+    const sentToday = shipments.filter((shipment) => normalizeDate(shipment.createdAt || shipment.sentDate) === today).length
     const pending = shipments.filter((shipment) => shipment.status === 'NOT_RECEIVED').length
     const received = shipments.filter((shipment) => shipment.status === 'RECEIVED').length
 
@@ -259,13 +258,77 @@ export function CustomerDashboardPage() {
       ) : (
         <div className="trackdocs-page-entrance trackdocs-customer-dashboard-grid">
           <section className="space-y-4 xl:space-y-4">
-            <div className="trackdocs-stagger-list grid items-stretch gap-4 md:grid-cols-3">
+            {/* Mobile Customer Summary Strip */}
+            <div className="flex items-center justify-between rounded-[20px] bg-white p-3 shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.04)] lg:hidden">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#bff4fb_0%,#67e8f9_38%,#22d3ee_72%,#0891b2_100%)] text-[#04212a]">
+                  <Building2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-[13.5px] font-[800] leading-tight text-[var(--td-text-strong)]">{session.displayName}</p>
+                  <p className="text-[11px] font-[700] text-[var(--td-text-muted)] mt-0.5 uppercase tracking-wider">{session.customerCode ?? '-'}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="trackdocs-stagger-list grid grid-cols-3 items-stretch gap-2 sm:gap-3 md:gap-4">
               {stats.map((stat) => (
                 <StatCard key={stat.label} {...stat} compact />
               ))}
             </div>
 
+            {/* Mobile Compact Filter */}
+            <div className="xl:hidden rounded-[20px] bg-[rgba(255,255,255,0.7)] p-3 border border-[rgba(0,0,0,0.03)] shadow-[0_2px_8px_rgba(0,0,0,0.02)] space-y-3">
+              <div className="flex rounded-[14px] bg-[rgba(15,23,42,0.04)] p-1">
+                {statusOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setStatus(option.value)}
+                    className={
+                      option.value === status
+                        ? 'flex-1 rounded-[10px] bg-[#D7EA49] py-2 text-[12px] font-[800] text-[#172008] shadow-[0_4px_12px_rgba(215,234,73,0.3)] transition-all'
+                        : 'flex-1 rounded-[10px] py-2 text-[12px] font-[600] text-[var(--td-text-muted)] transition-all hover:text-[var(--td-text-strong)]'
+                    }
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
+                  <input
+                    type="text"
+                    placeholder="ค้นหา Tracking No..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] placeholder:text-[var(--td-text-muted)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
+                  />
+                </div>
+                <div className="relative">
+                  <CalendarDays className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
+                  />
+                </div>
+              </div>
+              {hasFilters && (
+                <div className="flex items-center justify-between text-[11px] font-[600] text-[var(--td-text-muted)] px-1 pt-1">
+                  <span>พบ {filteredShipments.length} รายการ</span>
+                  <button type="button" onClick={() => { setQuery(''); setStatus('all'); setDate(''); }} className="text-[#0891b2] font-[800] hover:underline">
+                    ล้างตัวกรอง
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Desktop Original Top Filter - hidden on all sizes now since we use the side filter for desktop, wait, the top filter is lg:block but let's hide it on mobile. Wait, earlier it was hidden entirely on mobile? It was hidden on mobile. */}
             <Card tone="glass" padding="md" className="hidden trackdocs-entrance trackdocs-filter-module trackdocs-stagger-list space-y-5 rounded-[26px] p-5 lg:p-6">
+
               <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div className="flex items-start gap-4">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#eff8c9_0%,#d7ea49_100%)] text-[#8aa200] shadow-[0_14px_24px_rgba(215,234,73,0.14)]">
@@ -349,6 +412,17 @@ export function CustomerDashboardPage() {
               />
             ) : (
               <>
+                {/* Mobile Recent Shipments Header */}
+                <div className="flex items-start gap-3 px-1 md:hidden mb-2 mt-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[rgba(0,0,0,0.06)] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                    <CalendarDays className="h-5 w-5 text-[var(--td-text-strong)]" />
+                  </div>
+                  <div className="flex flex-col justify-center py-0.5">
+                    <h2 className="text-[19px] font-black tracking-tight text-[var(--td-text-strong)] leading-tight">รายการจัดส่งล่าสุด</h2>
+                    <p className="mt-0.5 text-[11.5px] font-[600] text-[var(--td-text-muted)] leading-relaxed">อัปเดตล่าสุดเพื่อให้ติดตามและตรวจสอบเอกสารได้ต่อเนื่อง</p>
+                  </div>
+                </div>
+
                 <div className="trackdocs-stagger-list space-y-4 md:hidden">
                   {filteredShipments.map((shipment) => (
                     <ShipmentListCard key={shipment.shipmentId} shipment={shipment} />
@@ -437,7 +511,7 @@ export function CustomerDashboardPage() {
             )}
           </section>
 
-          <aside className="trackdocs-stagger-list space-y-4 xl:sticky xl:top-4">
+          <aside className="hidden xl:block trackdocs-stagger-list space-y-4 xl:sticky xl:top-4">
             <Card tone="glass" padding="md" className="trackdocs-side-filter-module trackdocs-side-module rounded-[20px] p-4">
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#eff8c9_0%,#d7ea49_100%)] text-[#8aa200] shadow-[0_14px_24px_rgba(215,234,73,0.14)]">
