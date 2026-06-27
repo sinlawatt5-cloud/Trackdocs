@@ -31,6 +31,25 @@ const path = require('path');
   // Wait a bit more for data and animations
   await new Promise(r => setTimeout(r, 2000)); 
 
+  // Navigate to create shipment page
+  await page.goto('http://localhost:5174/admin/create-shipment', { waitUntil: 'networkidle2' });
+  await new Promise(r => setTimeout(r, 1000));
+
+  // Click on the '3. ยืนยัน' button (Confirm step)
+  try {
+    const buttons = await page.$$('button');
+    for (const btn of buttons) {
+      const text = await page.evaluate(el => el.textContent, btn);
+      if (text.includes('3. ยืนยัน')) {
+        await btn.click();
+        break;
+      }
+    }
+    await new Promise(r => setTimeout(r, 1000));
+  } catch (e) {
+    console.log('Could not click on step 3', e);
+  }
+
   const outputPath = 'C:/Users/pc-game/.gemini/antigravity/brain/c9532dab-9cf2-450d-b9bf-e6f9f50af021/mobile_screenshot.png';
   await page.screenshot({path: outputPath, fullPage: true});
   

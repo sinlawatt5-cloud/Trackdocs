@@ -1,4 +1,4 @@
-import { UploadCloud, X } from 'lucide-react'
+import { UploadCloud, X, FileImage } from 'lucide-react'
 import { useRef, type ChangeEvent } from 'react'
 import { cn } from '../lib/cn'
 import { motion } from '../lib/motion'
@@ -14,6 +14,7 @@ interface ImageUploaderProps {
   accept?: string
   optional?: boolean
   compact?: boolean
+  variant?: 'default' | 'mobile'
 }
 
 export function ImageUploader({
@@ -27,6 +28,7 @@ export function ImageUploader({
   accept = 'image/*',
   optional,
   compact,
+  variant = 'default',
 }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -48,6 +50,57 @@ export function ImageUploader({
     onClear()
   }
 
+  if (variant === 'mobile') {
+    return (
+      <div className="space-y-1.5">
+        <div className="flex items-center gap-3 rounded-[18px] border border-[rgba(15,23,42,0.06)] bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+          {previewUrl || imageUrl ? (
+            <>
+              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-[12px] border border-[rgba(15,23,42,0.08)] bg-black/5">
+                <img
+                  src={previewUrl || imageUrl}
+                  alt={label}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[12px] font-bold text-[var(--td-text-strong)]">{label}</p>
+                <p className="truncate text-[10px] text-[var(--td-text-muted)]">อัปโหลดแล้ว</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleClear}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-50 text-rose-500 transition active:scale-95"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-[rgba(240,250,252,0.8)] text-[#2bc7e8]">
+                <FileImage className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[12px] font-bold text-[var(--td-text-strong)]">{label}</p>
+                <p className="truncate text-[10px] text-[var(--td-text-muted)]">{description}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="shrink-0 rounded-full bg-[#f8f9fa] px-3 py-1.5 text-[11px] font-bold text-[var(--td-text-strong)] transition active:scale-95"
+              >
+                เลือกไฟล์
+              </button>
+            </>
+          )}
+        </div>
+        <input ref={inputRef} type="file" accept={accept} className="hidden" onChange={handleChange} />
+        {error ? <p className="px-2 text-[10px] font-medium text-rose-500">{error}</p> : null}
+      </div>
+    )
+  }
+
+  // --- DEFAULT (DESKTOP) VARIANT ---
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-3">

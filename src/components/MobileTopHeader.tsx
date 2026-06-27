@@ -4,7 +4,7 @@ import { cn } from '../lib/cn'
 
 export function MobileTopHeader() {
   return (
-    <div className="trackdocs-entrance sticky top-0 z-50 flex h-[64px] items-center justify-between bg-[var(--td-bg)] px-4 sm:h-[72px] sm:px-6 lg:hidden">
+    <div className="trackdocs-entrance sticky top-2 z-50 flex h-[64px] items-center justify-between rounded-[24px] bg-gradient-to-b from-[#1d1e23] to-[#111216] px-4 shadow-lg sm:top-4 sm:h-[72px] sm:px-6 lg:hidden">
       <div className="flex items-center gap-[10px]">
         <div className="relative flex h-[32px] w-[32px] shrink-0 items-center justify-center text-[#172008]">
           <svg
@@ -33,10 +33,10 @@ export function MobileTopHeader() {
           <ShieldCheck className="relative z-[1] h-[14px] w-[14px] stroke-[2.5]" />
         </div>
         <div className="flex flex-col justify-center">
-          <p className="text-[14px] font-[900] leading-none tracking-[0.08em] text-[var(--td-text-strong)]" style={{ transform: "translateY(1px)" }}>
+          <p className="text-[14px] font-[900] leading-none tracking-[0.08em] text-white" style={{ transform: "translateY(1px)" }}>
             TRACKDOCS
           </p>
-          <p className="mt-[4px] text-[7.5px] font-[700] leading-none tracking-[0.15em] text-[var(--td-text-muted)]">
+          <p className="mt-[4px] text-[7.5px] font-[700] leading-none tracking-[0.15em] text-[rgba(255,255,255,0.4)]">
             WORKSPACE OS
           </p>
         </div>
@@ -47,17 +47,17 @@ export function MobileTopHeader() {
           type="button"
           className={cn(
             motion.button,
-            "relative flex h-[36px] w-[36px] items-center justify-center rounded-full border border-[rgba(0,0,0,0.04)] bg-white text-[var(--td-text-muted)] shadow-sm hover:text-[var(--td-text-strong)] active:scale-[0.96]"
+            "relative flex h-[36px] w-[36px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[rgba(255,255,255,0.65)] hover:text-white hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.96]"
           )}
         >
           <Bell className="h-[18px] w-[18px]" />
-          <span className="absolute right-[9px] top-[9px] h-[6px] w-[6px] rounded-full bg-[#BED52B] ring-2 ring-white" />
+          <span className="absolute right-[9px] top-[9px] h-[6px] w-[6px] rounded-full bg-[#BED52B] ring-2 ring-[#111418]" />
         </button>
         <button
           type="button"
           className={cn(
             motion.button,
-            "relative flex h-[36px] w-[36px] items-center justify-center rounded-full border border-[rgba(0,0,0,0.04)] bg-white text-[var(--td-text-muted)] shadow-sm hover:text-[var(--td-text-strong)] active:scale-[0.96]"
+            "relative flex h-[36px] w-[36px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[rgba(255,255,255,0.65)] hover:text-white hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.96]"
           )}
         >
           <UserCircle className="h-[18px] w-[18px]" />
