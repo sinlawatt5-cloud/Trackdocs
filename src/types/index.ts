@@ -81,8 +81,9 @@ export interface ShipmentImageDraft {
 export interface DashboardStat {
   label: string
   value: string
-  tone: 'cyan' | 'amber' | 'green' | 'red' | 'slate'
+  tone: 'cyan' | 'amber' | 'green' | 'red' | 'slate' | 'lime'
   description: string
+  isLive?: boolean
 }
 
 export interface FilterState {
