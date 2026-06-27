@@ -4,9 +4,12 @@ import { cn } from '../lib/cn'
 
 export function MobileTopHeader() {
   return (
-    <div className="trackdocs-entrance sticky top-2 z-50 flex h-[64px] items-center justify-between rounded-[24px] bg-gradient-to-b from-[#1d1e23] to-[#111216] px-4 shadow-lg sm:top-4 sm:h-[72px] sm:px-6 lg:hidden">
-      <div className="flex items-center gap-[10px]">
-        <div className="animate-fade-slide-up relative flex h-[32px] w-[32px] shrink-0 items-center justify-center text-[#172008]">
+    <div className="trackdocs-entrance sticky top-2 z-50 flex h-[64px] items-center justify-between rounded-[24px] border border-[rgba(255,255,255,0.06)] bg-gradient-to-b from-[#1d1e23] to-[#111216] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_20px_rgba(0,0,0,0.18)] sm:top-4 sm:h-[72px] sm:px-5 lg:hidden">
+      <div className="flex flex-1 min-w-0 items-center gap-[10px] sm:gap-[12px] pr-4">
+        <div 
+          className="animate-fade-slide-up relative flex h-[34px] w-[34px] shrink-0 flex-none items-center justify-center text-[#172008]"
+          style={{ animationDelay: '150ms', animationFillMode: 'both' }}
+        >
           <svg
             viewBox="0 0 48 48"
             className="absolute inset-0 h-full w-full drop-shadow-[0_2px_8px_rgba(215,234,73,0.15)]"
@@ -32,14 +35,27 @@ export function MobileTopHeader() {
           </svg>
           <ShieldCheck className="relative z-[1] h-[14px] w-[14px] stroke-[2.5]" />
         </div>
-        <div className="flex flex-col justify-center overflow-hidden">
-          <p className="text-[17px] font-[800] uppercase leading-none tracking-[0.1em] whitespace-nowrap text-white">
-            {'TRACKDOCS'.split('').map((char, i) => (
-              <span key={i} className="inline-block animate-fade-slide-up" style={{ animationDelay: `${150 + i * 40}ms` }}>
-                {char === ' ' ? '\u00A0' : char}
+        <div className="min-w-0 flex-1 flex flex-col justify-center overflow-hidden">
+          <h1 
+            className="text-[clamp(15px,3.8vw,18px)] font-[600] uppercase tracking-[0.1em] italic whitespace-nowrap text-white leading-[1] text-ellipsis overflow-hidden"
+            style={{ 
+              fontFamily: '"Playfair Display", serif',
+              textRendering: 'geometricPrecision'
+            }}
+          >
+            {"TRACKDOCS".split("").map((char, index) => (
+              <span
+                key={index}
+                className="inline-block animate-fade-slide-up"
+                style={{
+                  animationDelay: `${190 + index * 40}ms`,
+                  animationFillMode: 'both'
+                }}
+              >
+                {char}
               </span>
             ))}
-          </p>
+          </h1>
         </div>
       </div>
 

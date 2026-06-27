@@ -168,8 +168,7 @@ export function CustomerDashboardPage() {
   }, [date, query, shipments, status])
 
   const stats = useMemo(() => {
-    const today = new Date().toISOString().slice(0, 10)
-    const sentToday = shipments.filter((shipment) => normalizeDate(shipment.createdAt || shipment.sentDate) === today).length
+
     const pending = shipments.filter((shipment) => shipment.status === 'NOT_RECEIVED').length
     const received = shipments.filter((shipment) => shipment.status === 'RECEIVED').length
 
