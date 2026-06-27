@@ -63,12 +63,34 @@ export function LoginPage() {
             padding="lg"
             className="trackdocs-login-card trackdocs-signal-panel login-page-enter relative overflow-hidden border border-[rgba(15,23,42,0.12)] bg-[linear-gradient(180deg,rgba(250,250,248,0.96),rgba(242,244,239,0.92))] p-6 shadow-[0_30px_100px_rgba(15,23,42,0.16)] sm:p-8"
           >
-            <div className="login-logo-enter flex items-center gap-4 sm:gap-5">
-              <div className="trackdocs-brand-mark flex h-[72px] w-[72px] items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#f2f962_0%,#d7ea49_56%,#b9d82b_100%)] text-[#1a2106] shadow-[0_18px_34px_rgba(215,234,73,0.26)]">
+            <div className="flex items-center gap-4 sm:gap-5">
+              <div 
+                className="trackdocs-brand-mark animate-fade-slide-up flex h-[72px] w-[72px] items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#f2f962_0%,#d7ea49_56%,#b9d82b_100%)] text-[#1a2106] shadow-[0_18px_34px_rgba(215,234,73,0.26)]"
+                style={{ animationDelay: '150ms', animationFillMode: 'both' }}
+              >
                 <ShieldCheck className="h-9 w-9" />
               </div>
-              <div className="min-w-0">
-                <p className="trackdocs-login-wordmark">TRACKDOCS</p>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <h1 
+                  className="text-[clamp(40px,5vw,52px)] font-[700] uppercase tracking-[0.1em] italic whitespace-nowrap text-slate-900 leading-[1] text-ellipsis overflow-hidden"
+                  style={{ 
+                    fontFamily: '"Playfair Display", serif',
+                    textRendering: 'geometricPrecision'
+                  }}
+                >
+                  {"TRACKDOCS".split("").map((char, index) => (
+                    <span
+                      key={index}
+                      className="inline-block animate-fade-slide-up"
+                      style={{
+                        animationDelay: `${190 + index * 40}ms`,
+                        animationFillMode: 'both'
+                      }}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </h1>
               </div>
             </div>
 
