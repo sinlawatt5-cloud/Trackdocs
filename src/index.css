@@ -1737,3 +1737,23 @@ img {
 .animate-radar-ping {
   animation: radar-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+@keyframes fade-slide-up {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-slide-up {
+  animation: fade-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+.animation-delay-150 { animation-delay: 150ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+
+@keyframes cinematic-unblur {
+  0% { opacity: 0; filter: blur(12px); transform: scale(1.08); }
+  100% { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+.animate-cinematic {
+  animation: cinematic-unblur 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}

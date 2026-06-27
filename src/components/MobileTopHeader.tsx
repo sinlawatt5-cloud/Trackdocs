@@ -6,7 +6,7 @@ export function MobileTopHeader() {
   return (
     <div className="trackdocs-entrance sticky top-2 z-50 flex h-[64px] items-center justify-between rounded-[24px] bg-gradient-to-b from-[#1d1e23] to-[#111216] px-4 shadow-lg sm:top-4 sm:h-[72px] sm:px-6 lg:hidden">
       <div className="flex items-center gap-[10px]">
-        <div className="relative flex h-[32px] w-[32px] shrink-0 items-center justify-center text-[#172008]">
+        <div className="animate-fade-slide-up relative flex h-[32px] w-[32px] shrink-0 items-center justify-center text-[#172008]">
           <svg
             viewBox="0 0 48 48"
             className="absolute inset-0 h-full w-full drop-shadow-[0_2px_8px_rgba(215,234,73,0.15)]"
@@ -32,12 +32,13 @@ export function MobileTopHeader() {
           </svg>
           <ShieldCheck className="relative z-[1] h-[14px] w-[14px] stroke-[2.5]" />
         </div>
-        <div className="flex flex-col justify-center">
-          <p className="text-[14px] font-[900] leading-none tracking-[0.08em] text-white" style={{ transform: "translateY(1px)" }}>
-            TRACKDOCS
-          </p>
-          <p className="mt-[4px] text-[7.5px] font-[700] leading-none tracking-[0.15em] text-[rgba(255,255,255,0.4)]">
-            WORKSPACE OS
+        <div className="flex flex-col justify-center overflow-hidden">
+          <p className="text-[17px] font-[800] uppercase leading-none tracking-[0.1em] whitespace-nowrap text-white">
+            {'TRACKDOCS'.split('').map((char, i) => (
+              <span key={i} className="inline-block animate-fade-slide-up" style={{ animationDelay: `${150 + i * 40}ms` }}>
+                {char === ' ' ? '\u00A0' : char}
+              </span>
+            ))}
           </p>
         </div>
       </div>

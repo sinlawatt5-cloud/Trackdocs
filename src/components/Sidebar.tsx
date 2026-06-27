@@ -41,7 +41,7 @@ export function Sidebar({ session }: SidebarProps) {
     <aside className="trackdocs-sidebar flex flex-col gap-8 p-4 lg:sticky lg:top-0 lg:h-[100dvh] lg:rounded-none lg:p-6 lg:pr-5">
       <div className="trackdocs-brand-header trackdocs-entrance rounded-[24px] border border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.02)] px-5 py-6 text-[var(--td-sidebar-text)] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all duration-300 hover:bg-[rgba(255,255,255,0.03)]">
         <div className="flex items-center gap-[15px]">
-          <div className="trackdocs-brand-mark relative flex h-[42px] w-[42px] shrink-0 items-center justify-center text-[#172008] transition-transform duration-300 group-hover:scale-[1.02]">
+          <div className="trackdocs-brand-mark animate-fade-slide-up relative flex h-[42px] w-[42px] shrink-0 items-center justify-center text-[#172008] transition-transform duration-300 group-hover:scale-[1.02]">
             <svg
               viewBox="0 0 48 48"
               className="absolute inset-0 h-full w-full drop-shadow-[0_8px_16px_rgba(215,234,73,0.15)]"
@@ -67,12 +67,13 @@ export function Sidebar({ session }: SidebarProps) {
             </svg>
             <ShieldCheck className="relative z-[1] h-[18px] w-[18px] stroke-[2.5]" />
           </div>
-          <div className="min-w-0 flex-1 flex flex-col justify-center">
-            <p className="text-[19px] font-[900] uppercase tracking-[0.11em] text-[var(--td-sidebar-text)] leading-none" style={{ transform: "translateY(1px)" }}>
-              TRACKDOCS
-            </p>
-            <p className="mt-[5px] text-[9px] font-[800] uppercase tracking-[0.18em] text-[rgba(255,255,255,0.4)] leading-none">
-              WORKSPACE OS
+          <div className="min-w-0 flex-1 flex flex-col justify-center overflow-hidden">
+            <p className="text-[21px] font-[800] uppercase tracking-[0.12em] whitespace-nowrap text-[var(--td-sidebar-text)] leading-none">
+              {'TRACKDOCS'.split('').map((char, i) => (
+                <span key={i} className="inline-block animate-fade-slide-up" style={{ animationDelay: `${150 + i * 40}ms` }}>
+                  {char === ' ' ? '\u00A0' : char}
+                </span>
+              ))}
             </p>
           </div>
         </div>

@@ -257,7 +257,7 @@ export function CustomerDashboardPage() {
         <ErrorState message={error} onRetry={() => window.location.reload()} />
       ) : (
         <div className="trackdocs-page-entrance trackdocs-customer-dashboard-grid">
-          <section className="space-y-4 xl:space-y-4">
+          <section className="trackdocs-stagger-list space-y-4 xl:space-y-4">
             {/* Mobile Customer Summary Strip */}
             <div className="flex items-center justify-between rounded-[20px] bg-white p-3 shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.04)] lg:hidden">
               <div className="flex items-center gap-3">
