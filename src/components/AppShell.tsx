@@ -13,9 +13,11 @@ interface AppShellProps {
   children: ReactNode
   actions?: ReactNode
   density?: 'normal' | 'compact'
+  /** Hide the Topbar on mobile only (used when the page provides its own hero card) */
+  hideTopbarMobile?: boolean
 }
 
-export function AppShell({ title, subtitle, children, actions, density = 'normal' }: AppShellProps) {
+export function AppShell({ title, subtitle, children, actions, density = 'normal', hideTopbarMobile = false }: AppShellProps) {
   const { session, signOut } = useAuth()
 
   if (!session) {
@@ -35,7 +37,14 @@ export function AppShell({ title, subtitle, children, actions, density = 'normal
             </div>
             <main className={motion.page + ' flex-1 pb-[90px] sm:pb-[100px] lg:pb-4'}>
               <div className="trackdocs-stagger-list flex w-full flex-col gap-5 lg:gap-7">
-                <Topbar session={session} title={title} subtitle={subtitle} onSignOut={signOut} compact={density === 'compact'} />
+                <Topbar
+                  session={session}
+                  title={title}
+                  subtitle={subtitle}
+                  onSignOut={signOut}
+                  compact={density === 'compact'}
+                  hideOnMobile={hideTopbarMobile}
+                />
                 {actions ? (
                   <Card
                     tone="glass"

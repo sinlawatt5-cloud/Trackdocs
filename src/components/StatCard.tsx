@@ -21,12 +21,12 @@ const badgeIconMap: Record<DashboardStat['tone'], typeof Activity> = {
 }
 
 const toneMap: Record<DashboardStat['tone'], string> = {
-  cyan: 'border-[rgba(43,199,232,0.16)]',
-  amber: 'border-[rgba(241,179,74,0.18)]',
-  green: 'border-[rgba(53,201,126,0.18)]',
-  red: 'border-[rgba(231,153,153,0.18)]',
-  slate: 'border-[rgba(15,23,42,0.08)]',
-  lime: 'border-[rgba(190,213,43,0.18)] bg-[rgba(244,249,216,0.5)]',
+  cyan: 'bg-[rgba(236,251,255,0.4)]',
+  amber: 'bg-[rgba(255,248,236,0.4)]',
+  green: 'bg-[rgba(240,255,246,0.4)]',
+  red: 'bg-[rgba(255,240,240,0.4)]',
+  slate: 'bg-[rgba(248,250,251,0.4)]',
+  lime: 'bg-[rgba(244,249,216,0.4)]',
 }
 
 const iconMap: Record<DashboardStat['tone'], typeof Box> = {
@@ -69,10 +69,8 @@ export function StatCard({
         'trackdocs-card trackdocs-card-strong trackdocs-signal-panel relative flex flex-col justify-between self-stretch overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]',
         // Mobile compact layout (for 3 columns), Desktop large layout
         mini 
-          ? 'min-h-[92px] rounded-[18px] p-3 lg:min-h-[136px] lg:rounded-[22px] lg:p-4 border border-[rgba(0,0,0,0.03)] bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.02),inset_0_1px_1px_rgba(255,255,255,1)]'
-          : 'min-h-[108px] rounded-[22px] p-3.5 sm:p-4 lg:min-h-[276px] lg:rounded-[30px] lg:p-7 xl:p-8 border border-[rgba(0,0,0,0.03)] bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.02),inset_0_1px_1px_rgba(255,255,255,1)]',
-        // Desktop uses toneMap background colors
-        toneMap[tone],
+          ? 'min-h-[92px] rounded-[24px] p-3 lg:min-h-[136px] lg:rounded-[24px] lg:p-4'
+          : 'min-h-[108px] rounded-[28px] p-3.5 sm:p-4 lg:min-h-[276px] lg:rounded-[30px] lg:p-7 xl:p-8'
       )}
     >
       {/* --- MOBILE LAYOUT --- */}

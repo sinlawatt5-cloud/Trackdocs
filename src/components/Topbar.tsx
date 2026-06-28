@@ -10,11 +10,13 @@ interface TopbarProps {
   subtitle?: string
   onSignOut: () => void
   compact?: boolean
+  /** When true the topbar is hidden on mobile (lg:block) — page provides its own hero card */
+  hideOnMobile?: boolean
 }
 
-export function Topbar({ session, title, subtitle, onSignOut, compact = false }: TopbarProps) {
+export function Topbar({ session, title, subtitle, onSignOut, compact = false, hideOnMobile = false }: TopbarProps) {
   return (
-    <header className={motion.entrance + ' trackdocs-card trackdocs-card-strong rounded-[24px] sm:rounded-[34px] px-6 py-6 sm:px-8 sm:py-8'}>
+    <header className={motion.entrance + ' trackdocs-card trackdocs-card-strong rounded-[24px] sm:rounded-[34px] px-6 py-6 sm:px-8 sm:py-8' + (hideOnMobile ? ' hidden lg:block' : '')}>
       <div className="flex flex-col gap-4 lg:gap-6 xl:flex-row xl:items-end xl:justify-between">
         
         {/* Title & Subtitle */}

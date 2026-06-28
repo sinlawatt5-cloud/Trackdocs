@@ -262,7 +262,7 @@ export function CustomerDashboardPage() {
         <div className="trackdocs-page-entrance trackdocs-customer-dashboard-grid">
           <section className="trackdocs-stagger-list space-y-4 xl:space-y-4">
             {/* Mobile Customer Summary Strip */}
-            <div className="flex items-center justify-between rounded-[22px] bg-white/95 p-3.5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] lg:hidden trackdocs-card trackdocs-card-strong border border-[rgba(0,0,0,0.03)]">
+            <div className="flex items-center justify-between rounded-[24px] bg-white/90 p-3.5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] lg:hidden trackdocs-card trackdocs-card-strong border border-[rgba(15,23,42,0.07)]">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#bff4fb_0%,#67e8f9_38%,#22d3ee_72%,#0891b2_100%)] text-[#04212a]">
                   <Building2 className="h-5 w-5" />
@@ -467,7 +467,7 @@ export function CustomerDashboardPage() {
             )}
 
             {/* Mobile Recent Shipments unified Card */}
-            <div className="trackdocs-card trackdocs-card-strong rounded-[22px] border border-[rgba(0,0,0,0.03)] bg-white/90 p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 md:hidden">
+            <div className="trackdocs-card trackdocs-card-strong rounded-[24px] border border-[rgba(15,23,42,0.07)] bg-white/90 p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 md:hidden">
               {/* Mobile Recent Shipments Header */}
               <div className="flex items-center gap-3 border-b border-[rgba(15,23,42,0.06)] pb-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#eff8c9] text-[#8aa200] border border-[#e2f0b7]/50">
@@ -528,7 +528,7 @@ export function CustomerDashboardPage() {
             </div>
 
             {/* Mobile Compact Filter */}
-            <div className="xl:hidden rounded-[22px] bg-white/95 p-4 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-3.5 trackdocs-card trackdocs-card-strong border border-[rgba(0,0,0,0.03)] mt-2">
+            <div className="xl:hidden rounded-[24px] bg-white/90 p-4 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-3.5 trackdocs-card trackdocs-card-strong border border-[rgba(15,23,42,0.07)] mt-2">
               <div className="flex rounded-full bg-[rgba(15,23,42,0.04)] p-1">
                 {[
                   { value: 'all', label: 'ทั้งหมด' },

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { LogOut, RefreshCw, UserRound, ChevronRight, Filter, CalendarDays, ActivitySquare, Search, ArrowUpRight } from 'lucide-react'
+import { LogOut, RefreshCw, UserRound, CalendarDays, Search, ArrowUpRight } from 'lucide-react'
 import { format } from 'date-fns'
 import { StatusBadge } from '../../components/StatusBadge'
 import { AppShell } from '../../components/AppShell'
@@ -7,7 +7,6 @@ import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { ShipmentTable } from '../../components/ShipmentTable'
 import { StatCard } from '../../components/StatCard'
-import { SegmentedFilter } from '../../components/SegmentedFilter'
 import { useAuth } from '../../auth/useAuth'
 import { listShipmentsForRole } from '../../lib/firestore'
 import type { Shipment } from '../../types'
@@ -46,10 +45,9 @@ export function AdminDashboardPage() {
     const received = shipments.filter((shipment) => shipment.status === 'RECEIVED').length
 
     return [
-      { label: 'ทั้งหมด', value: String(shipments.length), tone: 'cyan' as const, description: 'รายการทั้งหมด' },
-      { label: 'ยังไม่ได้รับ', value: String(pending), tone: 'amber' as const, description: 'เอกสารรอรับ' },
-      { label: 'รับแล้ว', value: String(received), tone: 'green' as const, description: 'รายการที่รับแล้ว' },
-      { label: 'ล่าสุด', value: '1', tone: 'lime' as const, description: 'รายการล่าสุด', isLive: true },
+      { label: 'ทั้งหมด', value: String(shipments.length), tone: 'cyan' as const, description: 'ทั้งหมด' },
+      { label: 'ยังไม่รับ', value: String(pending), tone: 'amber' as const, description: 'ยังไม่รับ' },
+      { label: 'รับแล้ว', value: String(received), tone: 'green' as const, description: 'รับแล้ว' },
     ]
   }, [shipments])
 
@@ -84,28 +82,17 @@ export function AdminDashboardPage() {
     >
       <div className="trackdocs-page-entrance space-y-5 lg:space-y-6">
         
-        {/* Mobile Action Pills */}
-        <div className="flex flex-wrap items-center gap-2 lg:hidden">
-          <button className="flex h-[38px] items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3.5 text-[12px] font-bold text-[var(--td-text-strong)] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
-            <UserRound className="h-4 w-4" /> Operation
-          </button>
-          <button onClick={fetchShipments} className="flex h-[38px] items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3.5 text-[12px] font-bold text-[var(--td-text-strong)] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
-            <RefreshCw className="h-4 w-4" /> รีเฟรช
-          </button>
-          <button onClick={signOut} className="flex h-[38px] items-center gap-1.5 rounded-full bg-[#e11d48] px-4 text-[12px] font-bold text-white shadow-[0_4px_12px_rgba(225,29,72,0.25)] transition-transform hover:bg-[#be123c] active:scale-[0.98]">
-            <LogOut className="h-4 w-4" /> Sign out
-          </button>
-        </div>
+
 
         {/* Metrics Grid */}
-        <div className="trackdocs-stagger-list grid grid-cols-2 items-start gap-3 md:gap-4 lg:grid-cols-4">
+        <div className="trackdocs-stagger-list grid grid-cols-3 items-stretch gap-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-3">
           {stats.map((stat) => (
-            <StatCard key={stat.label} {...stat} />
+            <StatCard key={stat.label} {...stat} mini />
           ))}
         </div>
 
         {/* Mobile Recent Shipments unified Card */}
-        <div className="trackdocs-card trackdocs-card-strong rounded-[22px] border border-[rgba(0,0,0,0.03)] bg-white/90 p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 lg:hidden">
+        <div className="trackdocs-card trackdocs-card-strong rounded-[24px] border border-[rgba(15,23,42,0.07)] bg-white p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 lg:hidden">
           {/* Mobile Recent Shipments Header */}
           <div className="flex items-center gap-3 border-b border-[rgba(15,23,42,0.06)] pb-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#eff8c9] text-[#8aa200] border border-[#e2f0b7]/50">
@@ -172,7 +159,7 @@ export function AdminDashboardPage() {
         </div>
 
         {/* Mobile Compact Filter */}
-        <div className="lg:hidden rounded-[22px] bg-white/95 p-3.5 border border-[rgba(0,0,0,0.03)] shadow-[0_4px_16px_rgba(0,0,0,0.03)] space-y-3.5 mt-2 trackdocs-card trackdocs-card-strong">
+        <div className="lg:hidden rounded-[24px] bg-white p-3.5 border border-[rgba(15,23,42,0.07)] shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-3.5 mt-2 trackdocs-card trackdocs-card-strong">
           <div className="flex rounded-full bg-[rgba(15,23,42,0.04)] p-1">
             {[
               { label: 'ทั้งหมด', value: 'all' },

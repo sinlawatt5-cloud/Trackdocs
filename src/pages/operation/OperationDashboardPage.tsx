@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
-import { CalendarDays, RefreshCw, SlidersHorizontal, LogOut, UserRound, ChevronRight, Filter, ActivitySquare, Search, ArrowUpRight } from 'lucide-react'
+import { CalendarDays, RefreshCw, SlidersHorizontal, ChevronRight, ActivitySquare, Search, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../components/AppShell'
 import { EmptyState } from '../../components/EmptyState'
@@ -8,13 +8,12 @@ import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { ShipmentTable } from '../../components/ShipmentTable'
 import { StatCard } from '../../components/StatCard'
-import { SegmentedFilter } from '../../components/SegmentedFilter'
 import { ReceiveDialog } from '../../components/ReceiveDialog'
 import { StatusBadge } from '../../components/StatusBadge'
 import { useAuth } from '../../auth/useAuth'
 import { listShipmentsForRole, receiveShipmentRecord } from '../../lib/firestore'
 import { uploadShipmentImage } from '../../lib/r2Upload'
-import type { Shipment, ShipmentStatus } from '../../types'
+import type { Shipment } from '../../types'
 
 function formatDateTime(value: string) {
   if (!value) return '-'
@@ -64,7 +63,7 @@ function matchesOperationFilter(shipment: Shipment, filter: OperationFilter, sel
 }
 
 export function OperationDashboardPage() {
-  const { session, signOut } = useAuth()
+  const { session } = useAuth()
   const [shipments, setShipments] = useState<Shipment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -136,26 +135,19 @@ export function OperationDashboardPage() {
         label: 'ทั้งหมด',
         value: String(shipments.length),
         tone: 'cyan' as const,
-        description: 'รายการทั้งหมด',
+        description: 'ทั้งหมด',
       },
       {
-        label: 'ยังไม่ได้รับ',
+        label: 'ยังไม่รับ',
         value: String(pending),
         tone: 'amber' as const,
-        description: 'เอกสารรอรับ',
+        description: 'ยังไม่รับ',
       },
       {
         label: 'รับแล้ว',
         value: String(received),
         tone: 'green' as const,
-        description: 'รายการที่รับแล้ว',
-      },
-      {
-        label: 'ล่าสุด',
-        value: '1',
-        tone: 'lime' as const,
-        description: 'รายการล่าสุด',
-        isLive: true,
+        description: 'รับแล้ว',
       },
     ]
   }, [shipments])
@@ -249,14 +241,14 @@ export function OperationDashboardPage() {
         <section className="space-y-4 lg:space-y-5">
           
           {/* Metrics Grid */}
-          <div className="trackdocs-stagger-list grid grid-cols-2 items-start gap-3 md:gap-4 lg:grid-cols-4">
+          <div className="trackdocs-stagger-list grid grid-cols-3 items-stretch gap-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-3">
             {stats.map((stat) => (
-              <StatCard key={stat.label} {...stat} />
+              <StatCard key={stat.label} {...stat} mini />
             ))}
           </div>
 
           {/* Mobile Recent Shipments unified Card */}
-          <div className="trackdocs-card trackdocs-card-strong rounded-[22px] border border-[rgba(0,0,0,0.03)] bg-white/90 p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 lg:hidden">
+          <div className="trackdocs-card trackdocs-card-strong rounded-[24px] border border-[rgba(15,23,42,0.07)] bg-white/90 p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 lg:hidden">
             {/* Mobile Recent Shipments Header */}
             <div className="flex items-center gap-3 border-b border-[rgba(15,23,42,0.06)] pb-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#eff8c9] text-[#8aa200] border border-[#e2f0b7]/50">
@@ -331,7 +323,7 @@ export function OperationDashboardPage() {
           </div>
 
           {/* ค้นหาและกรองรายการ (Mobile Card) */}
-          <div className="lg:hidden rounded-[22px] bg-white/90 p-4 sm:p-5 border border-[rgba(0,0,0,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-3.5 mt-2 trackdocs-card trackdocs-card-strong">
+          <div className="lg:hidden rounded-[24px] bg-white/90 p-4 sm:p-5 border border-[rgba(15,23,42,0.07)] shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-3.5 mt-2 trackdocs-card trackdocs-card-strong">
             <div className="flex rounded-full bg-[rgba(15,23,42,0.04)] p-1">
               {FILTER_OPTIONS.map((option) => (
                 <button

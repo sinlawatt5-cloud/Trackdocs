@@ -6,6 +6,7 @@ import { AppShell } from '../components/AppShell'
 import { Button } from '../components/Button'
 import { ErrorState } from '../components/ErrorState'
 import { LoadingState } from '../components/LoadingState'
+import { MobileShipmentDetail } from '../components/MobileShipmentDetail'
 import { Modal } from '../components/Modal'
 import { ReceiveDialog } from '../components/ReceiveDialog'
 import { ShipmentDetailPanel } from '../components/ShipmentDetailPanel'
@@ -150,6 +151,7 @@ export function ShipmentDetailPage() {
     <AppShell
       title="Shipment detail"
       subtitle="Review the proof trail, customer note, uploaded images, and handoff status."
+      hideTopbarMobile
       actions={
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Button tone="slate" onClick={() => navigate(backPath, { replace: true })} className="px-4 py-2 text-sm">
@@ -169,11 +171,20 @@ export function ShipmentDetailPage() {
         </div>
       }
     >
-      <div className="trackdocs-page-entrance">
-        <ShipmentDetailPanel
+      <div>
+        {/* Mobile layout – 4-card compact view */}
+        <MobileShipmentDetail
           shipment={shipment}
           onPreviewImage={(image) => setPreviewImage(image)}
+          onBack={() => navigate(backPath)}
         />
+        {/* Desktop layout – full panel (hidden on mobile) */}
+        <div className="hidden lg:block trackdocs-page-entrance">
+          <ShipmentDetailPanel
+            shipment={shipment}
+            onPreviewImage={(image) => setPreviewImage(image)}
+          />
+        </div>
       </div>
 
       <ReceiveDialog
