@@ -20,6 +20,7 @@ export const firebaseAuthDomain = requireEnv('VITE_FIREBASE_AUTH_DOMAIN', env.VI
 export const firebaseProjectId = requireEnv('VITE_FIREBASE_PROJECT_ID', env.VITE_FIREBASE_PROJECT_ID)
 export const firebaseAppId = requireEnv('VITE_FIREBASE_APP_ID', env.VITE_FIREBASE_APP_ID)
 export const r2WorkerUrl = requireEnv('VITE_R2_WORKER_URL', env.VITE_R2_WORKER_URL)
+export const r2PublicUrl = trim(env.VITE_R2_PUBLIC_URL) || ''
 
 export const firebaseConfig = {
   apiKey: firebaseApiKey,

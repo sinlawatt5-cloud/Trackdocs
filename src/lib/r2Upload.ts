@@ -1,6 +1,6 @@
 import imageCompression from 'browser-image-compression'
 import { auth } from './firebase'
-import { r2WorkerUrl } from './env'
+import { r2WorkerUrl, r2PublicUrl } from './env'
 import type { ImageType, UploadResult } from '../types'
 
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024
@@ -164,4 +164,22 @@ export async function uploadShipmentImage(params: {
   imageType: ImageType
 }) {
   return uploadImageToR2(params)
+}
+
+/**
+ * Converts an R2 object key or URL into a full public URL.
+ * - If the value is already an absolute URL (starts with http/https), return it as-is.
+ * - If it's just a key/path (e.g. "shipments/XXX/001/envelope.webp"), prepend the
+ *   public R2 base URL from VITE_R2_PUBLIC_URL.
+ */
+export function resolveImageUrl(urlOrKey: string | undefined | null): string {
+  if (!urlOrKey) return ''
+  const trimmed = urlOrKey.trim()
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed
+  }
+  if (!r2PublicUrl) return trimmed
+  const base = r2PublicUrl.replace(/\/$/, '')
+  const key = trimmed.replace(/^\//, '')
+  return `${base}/${key}`
 }

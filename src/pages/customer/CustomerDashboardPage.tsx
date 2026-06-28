@@ -285,7 +285,15 @@ export function CustomerDashboardPage() {
 
             <div className="trackdocs-stagger-list grid grid-cols-3 items-stretch gap-2 sm:gap-3 md:gap-4">
               {stats.map((stat) => (
-                <StatCard key={stat.label} {...stat} compact />
+                <StatCard 
+                  key={stat.label} 
+                  {...stat} 
+                  compact 
+                  hideDescription 
+                  centerValue 
+                  hideAllStamp 
+                  mini
+                />
               ))}
             </div>
 
@@ -574,7 +582,7 @@ export function CustomerDashboardPage() {
             </div>
           </section>
 
-          <aside className="hidden xl:block trackdocs-stagger-list space-y-4 xl:sticky xl:top-4">
+          <aside className="hidden xl:block trackdocs-stagger-list space-y-4 xl:sticky xl:top-4 xl:mt-[12px]">
             <Card tone="glass" padding="md" className="trackdocs-side-filter-module trackdocs-side-module rounded-[20px] p-4">
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#eff8c9_0%,#d7ea49_100%)] text-[#8aa200] shadow-[0_14px_24px_rgba(215,234,73,0.14)]">

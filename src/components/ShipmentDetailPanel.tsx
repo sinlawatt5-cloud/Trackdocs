@@ -5,6 +5,7 @@ import { ImagePreview } from './ImagePreview'
 import { StatusBadge } from './StatusBadge'
 import type { Shipment } from '../types'
 import { motion } from '../lib/motion'
+import { resolveImageUrl } from '../lib/r2Upload'
 
 interface ShipmentDetailPanelProps {
   shipment: Shipment
@@ -51,14 +52,14 @@ export function ShipmentDetailPanel({ shipment, onPreviewImage }: ShipmentDetail
 
       <div className="trackdocs-stagger-list grid gap-6 lg:grid-cols-3">
         <PreviewTile
-          src={shipment.envelopeImageUrl}
+          src={resolveImageUrl(shipment.envelopeImageUrl)}
           alt="Envelope image"
           label="Envelope image"
           className="lg:col-span-1"
           onPreview={onPreviewImage}
         />
         <PreviewTile
-          src={shipment.receiptImageUrl}
+          src={resolveImageUrl(shipment.receiptImageUrl)}
           alt="Receipt image"
           label="Receipt image"
           className="lg:col-span-1"
@@ -66,7 +67,7 @@ export function ShipmentDetailPanel({ shipment, onPreviewImage }: ShipmentDetail
         />
         {shipment.receivedImageUrl ? (
           <PreviewTile
-            src={shipment.receivedImageUrl}
+            src={resolveImageUrl(shipment.receivedImageUrl)}
             alt="Received image"
             label="Received image"
             className="lg:col-span-1"
