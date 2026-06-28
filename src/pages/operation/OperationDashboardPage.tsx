@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
-import { CalendarDays, RefreshCw, SlidersHorizontal, LogOut, UserRound, ChevronRight, Filter, ActivitySquare } from 'lucide-react'
+import { CalendarDays, RefreshCw, SlidersHorizontal, LogOut, UserRound, ChevronRight, Filter, ActivitySquare, Search, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../components/AppShell'
 import { EmptyState } from '../../components/EmptyState'
@@ -14,7 +14,13 @@ import { StatusBadge } from '../../components/StatusBadge'
 import { useAuth } from '../../auth/useAuth'
 import { listShipmentsForRole, receiveShipmentRecord } from '../../lib/firestore'
 import { uploadShipmentImage } from '../../lib/r2Upload'
-import type { Shipment } from '../../types'
+import type { Shipment, ShipmentStatus } from '../../types'
+
+function formatDateTime(value: string) {
+  if (!value) return '-'
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? '-' : format(date, 'dd MMM yyyy HH:mm')
+}
 
 type OperationFilter = 'all' | 'NOT_RECEIVED' | 'RECEIVED' | 'today' | 'date'
 
@@ -64,6 +70,7 @@ export function OperationDashboardPage() {
   const [error, setError] = useState('')
   const [filter, setFilter] = useState<OperationFilter>('all')
   const [selectedDate, setSelectedDate] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [receiveTarget, setReceiveTarget] = useState<Shipment | null>(null)
   const [receiveOpen, setReceiveOpen] = useState(false)
   const loadRequestId = useRef(0)
@@ -111,8 +118,14 @@ export function OperationDashboardPage() {
   }, [session])
 
   const visibleShipments = useMemo(() => {
-    return shipments.filter((shipment) => matchesOperationFilter(shipment, filter, selectedDate))
-  }, [filter, selectedDate, shipments])
+    return shipments.filter((shipment) => {
+      const matchesFilter = matchesOperationFilter(shipment, filter, selectedDate)
+      const matchesSearch = searchQuery
+        ? shipment.trackingNo.toLowerCase().includes(searchQuery.toLowerCase())
+        : true
+      return matchesFilter && matchesSearch
+    })
+  }, [filter, selectedDate, searchQuery, shipments])
 
   const stats = useMemo(() => {
     const pending = shipments.filter((shipment) => shipment.status === 'NOT_RECEIVED').length
@@ -235,30 +248,6 @@ export function OperationDashboardPage() {
       <div className="trackdocs-page-entrance grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start 2xl:grid-cols-[minmax(0,1fr)_368px]">
         <section className="space-y-4 lg:space-y-5">
           
-          {/* Mobile Action Pills */}
-          <div className="flex flex-wrap items-center gap-2 lg:hidden">
-            <button className="flex h-[38px] items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3.5 text-[12px] font-bold text-[var(--td-text-strong)] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
-              <UserRound className="h-4 w-4" /> Operation
-            </button>
-            <button onClick={loadShipments} className="flex h-[38px] items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3.5 text-[12px] font-bold text-[var(--td-text-strong)] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
-              <RefreshCw className="h-4 w-4" /> รีเฟรช
-            </button>
-            <button onClick={signOut} className="flex h-[38px] items-center gap-1.5 rounded-full bg-[#e11d48] px-4 text-[12px] font-bold text-white shadow-[0_4px_12px_rgba(225,29,72,0.25)] transition-transform hover:bg-[#be123c] active:scale-[0.98]">
-              <LogOut className="h-4 w-4" /> Sign out
-            </button>
-          </div>
-
-          {/* Operations compact status strip (Mobile) */}
-          <div className="flex h-[76px] items-center justify-between rounded-[22px] border border-[rgba(0,0,0,0.03)] bg-white px-4 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.02)] lg:hidden">
-            <div className="flex flex-col justify-center">
-              <span className="text-[11px] font-black uppercase tracking-wider text-[var(--td-text-muted)]">Operations center</span>
-              <span className="text-[12px] font-medium text-[var(--td-text-muted)] line-clamp-1 mt-0.5">เรียงงาน NOT_RECEIVED ขึ้นก่อน</span>
-            </div>
-            <span className="rounded-full border border-[rgba(0,0,0,0.08)] bg-[#f8f9fa] px-3 py-1.5 text-[10px] font-extrabold text-[var(--td-text-strong)]">
-              OPERATION
-            </span>
-          </div>
-
           {/* Metrics Grid */}
           <div className="trackdocs-stagger-list grid grid-cols-2 items-start gap-3 md:gap-4 lg:grid-cols-4">
             {stats.map((stat) => (
@@ -266,48 +255,129 @@ export function OperationDashboardPage() {
             ))}
           </div>
 
-          {/* Segmented Filter (Mobile) */}
-          <div className="pt-2 lg:hidden">
-            <SegmentedFilter
-              value={filter}
-              onChange={(val) => {
-                setFilter(val as OperationFilter)
-                if (val !== 'date') setSelectedDate('')
-              }}
-              options={[
-                { label: 'ทั้งหมด', value: 'all' },
-                { label: 'ยังไม่ได้รับ', value: 'NOT_RECEIVED' },
-                { label: 'รับแล้ว', value: 'RECEIVED' },
-                { label: 'วันนี้', value: 'today' },
-              ]}
-            />
+          {/* Mobile Recent Shipments unified Card */}
+          <div className="trackdocs-card trackdocs-card-strong rounded-[22px] border border-[rgba(0,0,0,0.03)] bg-white/90 p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 lg:hidden">
+            {/* Mobile Recent Shipments Header */}
+            <div className="flex items-center gap-3 border-b border-[rgba(15,23,42,0.06)] pb-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#eff8c9] text-[#8aa200] border border-[#e2f0b7]/50">
+                <CalendarDays className="h-4.5 w-4.5" />
+              </div>
+              <div>
+                <h2 className="text-[17px] font-black tracking-tight text-[var(--td-text-strong)]">รายการล่าสุด</h2>
+              </div>
+            </div>
+
+            {visibleShipments.length === 0 ? (
+              <div className="text-center py-8 text-[13px] font-bold text-[var(--td-text-muted)]">
+                ไม่พบรายการที่ตรงกับตัวกรองนี้
+              </div>
+            ) : (
+              <div className="trackdocs-stagger-list divide-y divide-[rgba(15,23,42,0.06)] space-y-4">
+                {visibleShipments.map((shipment) => {
+                  const statusLabel = shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'
+                  const canReceive = shipment.status === 'NOT_RECEIVED'
+                  return (
+                    <div key={shipment.shipmentId} className="flex flex-col pt-4 first:pt-0">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-[14px] font-[800] tracking-tight text-[var(--td-text-strong)] truncate">
+                              {shipment.trackingNo}
+                            </h3>
+                            <span className="text-[9px] font-[700] text-[var(--td-text-muted)] bg-[rgba(15,23,42,0.04)] px-1.5 py-0.5 rounded-full uppercase">
+                              {shipment.customerCode}
+                            </span>
+                          </div>
+                          <p className="text-[11px] font-[600] text-[var(--td-text-muted)] mt-1.5 flex items-center gap-1.5">
+                            <CalendarDays className="h-3.5 w-3.5" />
+                            {formatDateTime(shipment.createdAt)}
+                          </p>
+                        </div>
+                        <StatusBadge status={shipment.status} label={statusLabel} />
+                      </div>
+                      
+                      {shipment.customerNote && (
+                        <div className="mt-2.5 rounded-[12px] bg-[rgba(15,23,42,0.02)] px-3 py-2 text-[12px] text-[var(--td-text-muted)]">
+                          หมายเหตุ: {shipment.customerNote}
+                        </div>
+                      )}
+
+                      <div className="mt-3 flex items-center justify-end gap-2">
+                        {canReceive && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReceiveTarget(shipment)
+                              setReceiveOpen(true)
+                            }}
+                            className="flex h-[32px] items-center justify-center gap-1 rounded-full bg-[#D7EA49] px-4 text-[11px] font-black text-[#172008] shadow-[0_2px_8px_rgba(215,234,73,0.3)] active:scale-[0.98] transition-transform"
+                          >
+                            รับเอกสาร
+                          </button>
+                        )}
+                        <Link
+                          to={`/shipments/${shipment.shipmentId}`}
+                          state={{ shipment }}
+                          className="inline-flex h-[32px] items-center gap-1 rounded-full bg-[rgba(43,199,232,0.05)] px-3 text-[11px] font-bold text-[#109ec2] transition hover:bg-[rgba(43,199,232,0.1)]"
+                        >
+                          ดูรายละเอียด <ArrowUpRight className="h-3.5 w-3.5" />
+                        </Link>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
 
-          <div className="lg:hidden">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-[16px] font-bold text-[var(--td-text-strong)]">รายการล่าสุด</h2>
-              <button className="flex items-center gap-0.5 text-[12px] font-semibold text-[#869b18]">
-                ดูทั้งหมด <ChevronRight className="h-4 w-4" />
-              </button>
+          {/* ค้นหาและกรองรายการ (Mobile Card) */}
+          <div className="lg:hidden rounded-[22px] bg-white/90 p-4 sm:p-5 border border-[rgba(0,0,0,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-3.5 mt-2 trackdocs-card trackdocs-card-strong">
+            <div className="flex rounded-full bg-[rgba(15,23,42,0.04)] p-1">
+              {FILTER_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    setFilter(option.value)
+                    if (option.value !== 'date') {
+                      setSelectedDate('')
+                    }
+                  }}
+                  className={
+                    option.value === filter
+                      ? 'flex-1 rounded-full bg-[#d9f127] py-2 text-[12px] font-[800] text-[#171c01] shadow-[0_4px_12px_rgba(217,241,39,0.3)] transition-all'
+                      : 'flex-1 rounded-full py-2 text-[12px] font-[600] text-[var(--td-text-muted)] transition-all hover:text-[var(--td-text-strong)]'
+                  }
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
-            {visibleShipments.length === 0 ? (
-              <EmptyState
-                title="ยังไม่มีรายการเอกสาร"
-                description={
-                  filter === 'all'
-                    ? 'ยังไม่มีรายการจากทุกบริษัทในช่วง 50 รายการล่าสุด'
-                    : 'ไม่พบรายการที่ตรงกับตัวกรองนี้ ลองเปลี่ยนสถานะ บริษัท หรือวันที่'
-                }
-              />
-            ) : (
-              <OperationShipmentCards
-                shipments={visibleShipments}
-                onReceive={(shipment) => {
-                  setReceiveTarget(shipment)
-                  setReceiveOpen(true)
-                }}
-              />
-            )}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
+                <input
+                  type="text"
+                  placeholder="ค้นหา Tracking No..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2.5 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] placeholder:text-[var(--td-text-muted)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
+                />
+              </div>
+              <div className="relative">
+                <CalendarDays className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => {
+                    const nextDate = e.target.value
+                    setSelectedDate(nextDate)
+                    setFilter(nextDate ? 'date' : 'all')
+                  }}
+                  className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2.5 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="hidden lg:block">
@@ -329,19 +399,6 @@ export function OperationDashboardPage() {
                 }}
               />
             )}
-          </div>
-
-          {/* Compact Filter Bar (Mobile) */}
-          <div className="flex items-center gap-2 pt-2 lg:hidden">
-            <button className="flex h-[44px] flex-1 items-center justify-center gap-2 rounded-[16px] border border-[rgba(0,0,0,0.06)] bg-white text-[13px] font-bold text-[var(--td-text-strong)] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
-              <Filter className="h-[18px] w-[18px]" /> ตัวกรอง
-            </button>
-            <button className="flex h-[44px] flex-1 items-center justify-between rounded-[16px] border border-[rgba(0,0,0,0.06)] bg-white px-4 text-[13px] font-bold text-[var(--td-text-strong)] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
-              <div className="flex items-center gap-2">
-                <CalendarDays className="h-[18px] w-[18px]" /> เลือกวันที่
-              </div>
-              <ChevronRight className="h-4 w-4 text-[var(--td-text-muted)]" />
-            </button>
           </div>
         </section>
 

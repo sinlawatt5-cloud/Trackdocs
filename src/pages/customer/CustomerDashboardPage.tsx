@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { ArrowUpRight, Building2, CalendarDays, CheckCircle2, Search, Send, TrendingUp } from 'lucide-react'
+import { ArrowUpRight, Building2, CalendarDays, CheckCircle2, Search, Send, TrendingUp, LogOut } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../auth/useAuth'
@@ -15,7 +15,7 @@ import { StatusBadge } from '../../components/StatusBadge'
 import { getCustomerShipments } from '../../lib/firestore'
 import type { Shipment, ShipmentStatus } from '../../types'
 
-type StatusFilter = 'all' | ShipmentStatus
+type StatusFilter = 'all' | ShipmentStatus | 'today'
 
 const statusOptions: Array<{ value: StatusFilter; label: string }> = [
   { value: 'all', label: 'ทั้งหมด' },
@@ -94,7 +94,7 @@ function ShipmentListCard({ shipment }: { shipment: Shipment }) {
 }
 
 export function CustomerDashboardPage() {
-  const { session } = useAuth()
+  const { session, signOut } = useAuth()
   const [shipments, setShipments] = useState<Shipment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -145,7 +145,11 @@ export function CustomerDashboardPage() {
     const selectedDate = normalizeDate(date)
 
     return shipments.filter((shipment) => {
-      if (status !== 'all' && shipment.status !== status) {
+      if (status === 'today') {
+        const todayStr = format(new Date(), 'yyyy-MM-dd')
+        const createdStr = shipment.createdAt ? shipment.createdAt.slice(0, 10) : ''
+        if (createdStr !== todayStr) return false
+      } else if (status !== 'all' && shipment.status !== status) {
         return false
       }
 
@@ -177,19 +181,19 @@ export function CustomerDashboardPage() {
         label: 'ทั้งหมด',
         value: String(shipments.length),
         tone: 'cyan' as const,
-        description: 'รายการล่าสุด 50 รายการของบริษัทคุณ',
+        description: 'ทั้งหมด',
       },
       {
         label: 'ยังไม่ได้รับ',
         value: String(pending),
         tone: 'amber' as const,
-        description: 'เอกสารที่รอ Operation รับปลายทาง',
+        description: 'ยังไม่รับ',
       },
       {
         label: 'รับแล้ว',
         value: String(received),
         tone: 'green' as const,
-        description: 'รายการที่ปิดงานแล้ว',
+        description: 'รับแล้ว',
       },
     ]
   }, [shipments])
@@ -258,7 +262,7 @@ export function CustomerDashboardPage() {
         <div className="trackdocs-page-entrance trackdocs-customer-dashboard-grid">
           <section className="trackdocs-stagger-list space-y-4 xl:space-y-4">
             {/* Mobile Customer Summary Strip */}
-            <div className="flex items-center justify-between rounded-[20px] bg-white p-3 shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.04)] lg:hidden">
+            <div className="flex items-center justify-between rounded-[22px] bg-white/95 p-3.5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] lg:hidden trackdocs-card trackdocs-card-strong border border-[rgba(0,0,0,0.03)]">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#bff4fb_0%,#67e8f9_38%,#22d3ee_72%,#0891b2_100%)] text-[#04212a]">
                   <Building2 className="h-5 w-5" />
@@ -268,6 +272,15 @@ export function CustomerDashboardPage() {
                   <p className="text-[11px] font-[700] text-[var(--td-text-muted)] mt-0.5 uppercase tracking-wider">{session.customerCode ?? '-'}</p>
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={() => void signOut()}
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#e11d48] px-3.5 py-1.5 text-[11px] font-bold text-white shadow-[0_4px_14px_rgba(225,29,72,0.3)] transition-transform active:scale-95 hover:bg-[#be123c]"
+                aria-label="Sign out"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Sign out
+              </button>
             </div>
 
             <div className="trackdocs-stagger-list grid grid-cols-3 items-stretch gap-2 sm:gap-3 md:gap-4">
@@ -276,54 +289,6 @@ export function CustomerDashboardPage() {
               ))}
             </div>
 
-            {/* Mobile Compact Filter */}
-            <div className="xl:hidden rounded-[20px] bg-[rgba(255,255,255,0.7)] p-3 border border-[rgba(0,0,0,0.03)] shadow-[0_2px_8px_rgba(0,0,0,0.02)] space-y-3">
-              <div className="flex rounded-[14px] bg-[rgba(15,23,42,0.04)] p-1">
-                {statusOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setStatus(option.value)}
-                    className={
-                      option.value === status
-                        ? 'flex-1 rounded-[10px] bg-[#D7EA49] py-2 text-[12px] font-[800] text-[#172008] shadow-[0_4px_12px_rgba(215,234,73,0.3)] transition-all'
-                        : 'flex-1 rounded-[10px] py-2 text-[12px] font-[600] text-[var(--td-text-muted)] transition-all hover:text-[var(--td-text-strong)]'
-                    }
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
-                  <input
-                    type="text"
-                    placeholder="ค้นหา Tracking No..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] placeholder:text-[var(--td-text-muted)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
-                  />
-                </div>
-                <div className="relative">
-                  <CalendarDays className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
-                  />
-                </div>
-              </div>
-              {hasFilters && (
-                <div className="flex items-center justify-between text-[11px] font-[600] text-[var(--td-text-muted)] px-1 pt-1">
-                  <span>พบ {filteredShipments.length} รายการ</span>
-                  <button type="button" onClick={() => { setQuery(''); setStatus('all'); setDate(''); }} className="text-[#0891b2] font-[800] hover:underline">
-                    ล้างตัวกรอง
-                  </button>
-                </div>
-              )}
-            </div>
 
             {/* Desktop Original Top Filter - hidden on all sizes now since we use the side filter for desktop, wait, the top filter is lg:block but let's hide it on mobile. Wait, earlier it was hidden entirely on mobile? It was hidden on mobile. */}
             <Card tone="glass" padding="md" className="hidden trackdocs-entrance trackdocs-filter-module trackdocs-stagger-list space-y-5 rounded-[26px] p-5 lg:p-6">
@@ -398,116 +363,215 @@ export function CustomerDashboardPage() {
               ) : null}
             </Card>
 
+            {/* Desktop Views (Table & Empty State) */}
             {isEmpty ? (
-              <EmptyState
-                title={hasFilters ? 'ไม่พบรายการที่ตรงเงื่อนไข' : 'ยังไม่มีรายการเอกสาร'}
-                description={
-                  hasFilters
-                    ? 'ลองปรับ trackingNo, สถานะ หรือวันที่ใหม่'
-                    : 'เริ่มต้นด้วยการแจ้งส่งเอกสารรายการแรกของบริษัทคุณ'
-                }
-                actionLabel="แจ้งส่งเอกสารใหม่"
-                actionTo="/customer/create-shipment"
-              />
+              <div className="hidden md:block">
+                <EmptyState
+                  title={hasFilters ? 'ไม่พบรายการที่ตรงเงื่อนไข' : 'ยังไม่มีรายการเอกสาร'}
+                  description={
+                    hasFilters
+                      ? 'ลองปรับ trackingNo, สถานะ หรือวันที่ใหม่'
+                      : 'เริ่มต้นด้วยการแจ้งส่งเอกสารรายการแรกของบริษัทคุณ'
+                  }
+                  actionLabel="แจ้งส่งเอกสารใหม่"
+                  actionTo="/customer/create-shipment"
+                />
+              </div>
             ) : (
-              <>
-                {/* Mobile Recent Shipments Header */}
-                <div className="flex items-start gap-3 px-1 md:hidden mb-2 mt-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[rgba(0,0,0,0.06)] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                    <CalendarDays className="h-5 w-5 text-[var(--td-text-strong)]" />
-                  </div>
-                  <div className="flex flex-col justify-center py-0.5">
-                    <h2 className="text-[19px] font-black tracking-tight text-[var(--td-text-strong)] leading-tight">รายการจัดส่งล่าสุด</h2>
-                    <p className="mt-0.5 text-[11.5px] font-[600] text-[var(--td-text-muted)] leading-relaxed">อัปเดตล่าสุดเพื่อให้ติดตามและตรวจสอบเอกสารได้ต่อเนื่อง</p>
-                  </div>
-                </div>
-
-                <div className="trackdocs-stagger-list space-y-4 md:hidden">
-                  {filteredShipments.map((shipment) => (
-                    <ShipmentListCard key={shipment.shipmentId} shipment={shipment} />
-                  ))}
-                </div>
-
-                <Card tone="glass" padding="none" className="trackdocs-entrance trackdocs-latest-shipments-card hidden overflow-hidden rounded-[24px] md:block">
-                  <div className="flex items-start justify-between gap-3 border-b border-[rgba(15,23,42,0.08)] px-5 py-4">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[rgba(15,23,42,0.1)] bg-[rgba(255,255,255,0.78)] text-[var(--td-text-muted)]">
-                        <CalendarDays className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <p className="trackdocs-text-section-title">รายการจัดส่งล่าสุด</p>
-                        <p className="mt-1 trackdocs-text-body">อัปเดตล่าสุดเพื่อให้ติดตามและตรวจสอบเอกสารได้ต่อเนื่อง</p>
-                      </div>
+              <Card tone="glass" padding="none" className="trackdocs-entrance trackdocs-latest-shipments-card hidden overflow-hidden rounded-[24px] md:block">
+                <div className="flex items-start justify-between gap-3 border-b border-[rgba(15,23,42,0.08)] px-5 py-4">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[rgba(15,23,42,0.1)] bg-[rgba(255,255,255,0.78)] text-[var(--td-text-muted)]">
+                      <CalendarDays className="h-4 w-4" />
                     </div>
-                    <Link
-                      to="/customer/create-shipment"
-                      className="trackdocs-button-primary inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
-                    >
-                      ดูรายการทั้งหมด
-                      <ArrowUpRight className="h-4 w-4" />
-                    </Link>
+                    <div>
+                      <p className="trackdocs-text-section-title">รายการจัดส่งล่าสุด</p>
+                      <p className="mt-1 trackdocs-text-body">อัปเดตล่าสุดเพื่อให้ติดตามและตรวจสอบเอกสารได้ต่อเนื่อง</p>
+                    </div>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full border-separate border-spacing-0">
-                      <thead>
-                        <tr className="bg-[rgba(255,255,255,0.78)] text-left trackdocs-text-table-head text-[var(--td-text-muted)]">
-                          <th className="px-4 py-3">tracking no</th>
-                          <th className="px-4 py-3">วันที่ส่ง</th>
-                          <th className="px-4 py-3">จำนวนซอง</th>
-                          <th className="px-4 py-3">หมายเหตุลูกค้า</th>
-                          <th className="px-4 py-3">สถานะ</th>
-                          <th className="px-4 py-3">สร้างเมื่อ</th>
-                          <th className="px-4 py-3 text-right">action</th>
+                  <Link
+                    to="/customer/create-shipment"
+                    className="trackdocs-button-primary inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
+                  >
+                    ดูรายการทั้งหมด
+                    <ArrowUpRight className="h-4 w-4" />
+                  </Link>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border-separate border-spacing-0">
+                    <thead>
+                      <tr className="bg-[rgba(255,255,255,0.78)] text-left trackdocs-text-table-head text-[var(--td-text-muted)]">
+                        <th className="px-4 py-3">tracking no</th>
+                        <th className="px-4 py-3">วันที่ส่ง</th>
+                        <th className="px-4 py-3">จำนวนซอง</th>
+                        <th className="px-4 py-3">หมายเหตุลูกค้า</th>
+                        <th className="px-4 py-3">สถานะ</th>
+                        <th className="px-4 py-3">สร้างเมื่อ</th>
+                        <th className="px-4 py-3 text-right">action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredShipments.slice(0, 5).map((shipment) => (
+                        <tr
+                          key={shipment.shipmentId}
+                          className="border-t border-[rgba(15,23,42,0.06)] bg-[rgba(255,255,255,0.72)] align-middle transition hover:bg-[rgba(255,255,255,0.9)]"
+                        >
+                          <td className="px-4 py-3">
+                            <div className="space-y-1">
+                              <p className="trackdocs-text-body-strong text-[1rem]">
+                                {shipment.trackingNo}
+                              </p>
+                              <p className="trackdocs-text-caption text-[var(--td-text-muted)]">{shipment.customerCode}</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 trackdocs-text-body">{formatDate(shipment.sentDate)}</td>
+                          <td className="px-4 py-3 trackdocs-text-body-strong">
+                            {shipment.envelopeCount}
+                          </td>
+                          <td className="max-w-[300px] px-4 py-3 trackdocs-text-body text-[var(--td-text-strong)]">
+                            {shipment.customerNote || '-'}
+                          </td>
+                          <td className="px-4 py-3">
+                            <StatusBadge
+                              status={shipment.status}
+                              label={shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'}
+                            />
+                          </td>
+                          <td className="px-4 py-3 trackdocs-text-body">
+                            {formatDateTime(shipment.createdAt)}
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <Link
+                              to={`/shipments/${shipment.shipmentId}`}
+                              state={{ shipment }}
+                              className="trackdocs-button-primary inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold"
+                            >
+                              ดูรายละเอียด
+                              <ArrowUpRight className="h-4 w-4" />
+                            </Link>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {filteredShipments.slice(0, 5).map((shipment) => (
-                          <tr
-                            key={shipment.shipmentId}
-                            className="border-t border-[rgba(15,23,42,0.06)] bg-[rgba(255,255,255,0.72)] align-middle transition hover:bg-[rgba(255,255,255,0.9)]"
-                          >
-                            <td className="px-4 py-3">
-                              <div className="space-y-1">
-                                <p className="trackdocs-text-body-strong text-[1rem]">
-                                  {shipment.trackingNo}
-                                </p>
-                                <p className="trackdocs-text-caption text-[var(--td-text-muted)]">{shipment.customerCode}</p>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 trackdocs-text-body">{formatDate(shipment.sentDate)}</td>
-                            <td className="px-4 py-3 trackdocs-text-body-strong">
-                              {shipment.envelopeCount}
-                            </td>
-                            <td className="max-w-[300px] px-4 py-3 trackdocs-text-body text-[var(--td-text-strong)]">
-                              {shipment.customerNote || '-'}
-                            </td>
-                            <td className="px-4 py-3">
-                              <StatusBadge
-                                status={shipment.status}
-                                label={shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'}
-                              />
-                            </td>
-                            <td className="px-4 py-3 trackdocs-text-body">
-                              {formatDateTime(shipment.createdAt)}
-                            </td>
-                            <td className="px-4 py-3 text-right">
-                              <Link
-                                to={`/shipments/${shipment.shipmentId}`}
-                                state={{ shipment }}
-                                className="trackdocs-button-primary inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold"
-                              >
-                                ดูรายละเอียด
-                                <ArrowUpRight className="h-4 w-4" />
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </Card>
-              </>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
             )}
+
+            {/* Mobile Recent Shipments unified Card */}
+            <div className="trackdocs-card trackdocs-card-strong rounded-[22px] border border-[rgba(0,0,0,0.03)] bg-white/90 p-4 sm:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4 md:hidden">
+              {/* Mobile Recent Shipments Header */}
+              <div className="flex items-center gap-3 border-b border-[rgba(15,23,42,0.06)] pb-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#eff8c9] text-[#8aa200] border border-[#e2f0b7]/50">
+                  <CalendarDays className="h-4.5 w-4.5" />
+                </div>
+                <div>
+                  <h2 className="text-[17px] font-black tracking-tight text-[var(--td-text-strong)]">รายการล่าสุด</h2>
+                </div>
+              </div>
+
+              {filteredShipments.length === 0 ? (
+                <div className="text-center py-8 text-[13px] font-bold text-[var(--td-text-muted)]">
+                  ไม่พบรายการที่ตรงกับตัวกรองนี้
+                </div>
+              ) : (
+                <div className="trackdocs-stagger-list divide-y divide-[rgba(15,23,42,0.06)] space-y-4">
+                  {filteredShipments.map((shipment) => {
+                    const statusLabel = shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'
+                    return (
+                      <div key={shipment.shipmentId} className="flex flex-col pt-4 first:pt-0">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-[14px] font-[800] tracking-tight text-[var(--td-text-strong)] truncate">
+                                {shipment.trackingNo}
+                              </h3>
+                              <span className="text-[9px] font-[700] text-[var(--td-text-muted)] bg-[rgba(15,23,42,0.04)] px-1.5 py-0.5 rounded-full uppercase">
+                                {shipment.customerCode}
+                              </span>
+                            </div>
+                            <p className="text-[11px] font-[600] text-[var(--td-text-muted)] mt-1.5 flex items-center gap-1.5">
+                              <CalendarDays className="h-3.5 w-3.5" />
+                              {formatDateTime(shipment.createdAt)}
+                            </p>
+                          </div>
+                          <StatusBadge status={shipment.status} label={statusLabel} />
+                        </div>
+                        
+                        {shipment.customerNote && (
+                          <div className="mt-2.5 rounded-[12px] bg-[rgba(15,23,42,0.02)] px-3 py-2 text-[12px] text-[var(--td-text-muted)]">
+                            หมายเหตุ: {shipment.customerNote}
+                          </div>
+                        )}
+
+                        <div className="mt-3 flex items-center justify-end">
+                          <Link
+                            to={`/shipments/${shipment.shipmentId}`}
+                            className="inline-flex items-center gap-1 rounded-full bg-[rgba(43,199,232,0.05)] px-3 py-1.5 text-[11px] font-bold text-[#109ec2] transition hover:bg-[rgba(43,199,232,0.1)]"
+                          >
+                            ดูรายละเอียด <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Link>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Compact Filter */}
+            <div className="xl:hidden rounded-[22px] bg-white/95 p-4 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-3.5 trackdocs-card trackdocs-card-strong border border-[rgba(0,0,0,0.03)] mt-2">
+              <div className="flex rounded-full bg-[rgba(15,23,42,0.04)] p-1">
+                {[
+                  { value: 'all', label: 'ทั้งหมด' },
+                  { value: 'NOT_RECEIVED', label: 'ยังไม่ได้รับ' },
+                  { value: 'RECEIVED', label: 'รับแล้ว' },
+                  { value: 'today', label: 'วันนี้' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setStatus(option.value as any)}
+                    className={
+                      option.value === status
+                        ? 'flex-1 rounded-full bg-[#d9f127] py-2 text-[12px] font-[800] text-[#171c01] shadow-[0_4px_12px_rgba(217,241,39,0.3)] transition-all'
+                        : 'flex-1 rounded-full py-2 text-[12px] font-[600] text-[var(--td-text-muted)] transition-all hover:text-[var(--td-text-strong)]'
+                    }
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
+                  <input
+                    type="text"
+                    placeholder="ค้นหา Tracking No..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2.5 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] placeholder:text-[var(--td-text-muted)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
+                  />
+                </div>
+                <div className="relative">
+                  <CalendarDays className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--td-text-muted)]" />
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="w-full rounded-[12px] border border-[rgba(0,0,0,0.05)] bg-white py-2.5 pl-8 pr-3 text-[12px] font-[600] text-[var(--td-text-strong)] focus:border-[#BED52B] focus:outline-none focus:ring-1 focus:ring-[#BED52B] transition-all"
+                  />
+                </div>
+              </div>
+              {hasFilters && (
+                <div className="flex items-center justify-between text-[11px] font-[600] text-[var(--td-text-muted)] px-1 pt-1">
+                  <span>พบ {filteredShipments.length} รายการ</span>
+                  <button type="button" onClick={() => { setQuery(''); setStatus('all'); setDate(''); }} className="text-[#0891b2] font-[800] hover:underline">
+                    ล้างตัวกรอง
+                  </button>
+                </div>
+              )}
+            </div>
           </section>
 
           <aside className="hidden xl:block trackdocs-stagger-list space-y-4 xl:sticky xl:top-4">

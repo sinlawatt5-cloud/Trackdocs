@@ -14,14 +14,20 @@ interface TopbarProps {
 
 export function Topbar({ session, title, subtitle, onSignOut, compact = false }: TopbarProps) {
   return (
-    <header className={motion.entrance + ' lg:trackdocs-card lg:trackdocs-card-strong lg:rounded-[34px] lg:px-8 lg:py-8'}>
+    <header className={motion.entrance + ' trackdocs-card trackdocs-card-strong rounded-[24px] sm:rounded-[34px] px-6 py-6 sm:px-8 sm:py-8'}>
       <div className="flex flex-col gap-4 lg:gap-6 xl:flex-row xl:items-end xl:justify-between">
         
         {/* Title & Subtitle */}
-        <div className="flex flex-col gap-1.5 lg:gap-5">
-          <div className="trackdocs-text-badge hidden items-center gap-2 text-[var(--td-text-muted)] xl:flex">
-            <Menu className="h-4 w-4" />
-            TrackDocs
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="trackdocs-text-badge hidden items-center gap-2 text-[var(--td-text-muted)] xl:flex">
+              <Menu className="h-4 w-4" />
+              TrackDocs
+            </div>
+            <div className="trackdocs-proof-stamp inline-flex px-3.5 py-1.5 text-[var(--td-text-muted)]">
+              <span className="trackdocs-proof-stamp-dot bg-gradient-to-r from-[var(--td-accent-cyan)] to-[#9cc8d8]" />
+              Workspace overview
+            </div>
           </div>
           
           <div className="flex items-center justify-between gap-3">
@@ -34,15 +40,17 @@ export function Topbar({ session, title, subtitle, onSignOut, compact = false }:
                 <CalendarDays className="h-3.5 w-3.5 text-[var(--td-text-muted)]" />
                 {format(new Date(), 'd MMM yy')}
               </div>
-              <button
-                type="button"
-                onClick={onSignOut}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#e11d48] px-3.5 py-1.5 text-[11px] font-bold text-white shadow-[0_4px_14px_rgba(225,29,72,0.3)] transition-transform active:scale-95 hover:bg-[#be123c]"
-                aria-label="Sign out"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                Sign out
-              </button>
+              {session.role !== 'customer' && (
+                <button
+                  type="button"
+                  onClick={onSignOut}
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#e11d48] px-3.5 py-1.5 text-[11px] font-bold text-white shadow-[0_4px_14px_rgba(225,29,72,0.3)] transition-transform active:scale-95 hover:bg-[#be123c]"
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Sign out
+                </button>
+              )}
             </div>
           </div>
           
