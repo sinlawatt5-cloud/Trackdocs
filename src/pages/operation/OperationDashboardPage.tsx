@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
-import { CalendarDays, RefreshCw, SlidersHorizontal, ChevronRight, ActivitySquare, Search, ArrowUpRight } from 'lucide-react'
+import { CalendarDays, RefreshCw, SlidersHorizontal, Search, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../../components/AppShell'
 import { EmptyState } from '../../components/EmptyState'
@@ -163,7 +163,7 @@ export function OperationDashboardPage() {
 
   if (loading) {
     return (
-      <AppShell title="Operation dashboard" subtitle="Monitor and receive document deliveries in one place.">
+      <AppShell title="DASHBOARD" subtitle="Monitor and receive document deliveries in one place.">
         <LoadingState />
       </AppShell>
     )
@@ -171,7 +171,7 @@ export function OperationDashboardPage() {
 
   if (error) {
     return (
-      <AppShell title="Operation dashboard" subtitle="Monitor and receive document deliveries in one place.">
+      <AppShell title="DASHBOARD" subtitle="Monitor and receive document deliveries in one place.">
         <ErrorState message={error} onRetry={() => void loadShipments()} />
       </AppShell>
     )
@@ -211,7 +211,7 @@ export function OperationDashboardPage() {
   return (
     <AppShell
       density="compact"
-      title="ศูนย์รับเอกสาร"
+      title="DASHBOARD"
       subtitle="ตรวจรับเอกสารจากทุกบริษัท กรองตามสถานะหรือวันที่ และจัดการงานล่าสุดได้จากจุดเดียว"
       actions={
         <>
@@ -483,133 +483,6 @@ export function OperationDashboardPage() {
         onConfirm={handleConfirmReceive}
       />
     </AppShell>
-  )
-}
-
-function OperationShipmentCards({
-  shipments,
-  onReceive,
-}: {
-  shipments: Shipment[]
-  onReceive: (shipment: Shipment) => void
-}) {
-  return (
-    <div className="trackdocs-stagger-list space-y-3">
-      {shipments.map((shipment) => {
-        const canReceive = shipment.status === 'NOT_RECEIVED'
-
-        return (
-          <div key={shipment.shipmentId}>
-            {/* MOBILE COMPACT VIEW (120px - 150px) */}
-            <article className="lg:hidden relative flex flex-col rounded-[22px] border border-[rgba(255,255,255,0.8)] bg-white p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,1)]">
-              <div className="flex items-center gap-4">
-                <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-[#f0f4db] text-[#697d10] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                  <ActivitySquare className="h-5 w-5" />
-                </div>
-                <div className="flex flex-1 items-center justify-between">
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--td-text-muted)]">TRACKING NO</p>
-                    <p className="text-[15px] font-black text-[var(--td-text-strong)]">{shipment.trackingNo}</p>
-                  </div>
-                  <div className="mx-2 h-8 w-[1px] border-l border-dashed border-[rgba(0,0,0,0.1)]" />
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--td-text-muted)]">ลูกค้า</p>
-                    <p className="text-[13px] font-bold text-[var(--td-text-strong)]">{shipment.customerCode}</p>
-                  </div>
-                  <div className="mx-2 h-8 w-[1px] border-l border-dashed border-[rgba(0,0,0,0.1)]" />
-                  <div className={`flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-1 text-[10px] font-bold ${
-                    shipment.status === 'RECEIVED'
-                      ? 'border-[rgba(22,163,74,0.1)] bg-[#f0fdf4] text-[#166534]'
-                      : 'border-[rgba(245,158,11,0.1)] bg-[#fffbeb] text-[#b45309]'
-                  }`}>
-                    <span className={`h-1.5 w-1.5 rounded-full ${shipment.status === 'RECEIVED' ? 'bg-[#16a34a]' : 'bg-[#f59e0b]'}`} />
-                    {shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 text-[12px] font-medium text-[var(--td-text-muted)] line-clamp-1">
-                หมายเหตุ: {shipment.customerNote || '—'}
-              </div>
-              <div className="mt-3 flex gap-2">
-                {canReceive && (
-                  <button
-                    type="button"
-                    onClick={() => onReceive(shipment)}
-                    className="flex-1 flex h-[38px] items-center justify-center gap-1 rounded-[14px] bg-[#D7EA49] text-[12px] font-black text-[#172008] shadow-[0_2px_8px_rgba(215,234,73,0.3)] active:scale-[0.98] transition-transform"
-                  >
-                    รับเอกสาร
-                  </button>
-                )}
-                <Link
-                  to={`/shipments/${shipment.shipmentId}`}
-                  state={{ shipment }}
-                  className="flex-1 flex h-[38px] items-center justify-center gap-1 rounded-[14px] bg-[#f8f9fa] text-[12px] font-bold text-[var(--td-text-strong)] active:bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.04)] transition-all"
-                >
-                  ดูรายละเอียด <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </article>
-
-            {/* DESKTOP ORIGINAL VIEW */}
-            <article className="hidden lg:flex min-h-[280px] flex-col p-5 sm:p-6 trackdocs-card trackdocs-card-strong trackdocs-card-module">
-              <div className="flex items-start justify-between gap-3">
-                <div className="space-y-3">
-                  <span className="trackdocs-card-badge px-3 py-1.5 text-[var(--td-text-muted)]">
-                    <span className="trackdocs-card-badge-dot" aria-hidden="true" />
-                    {shipment.customerCode}
-                  </span>
-                  <div>
-                    <p className="trackdocs-text-badge text-[var(--td-text-muted)]">
-                      tracking no
-                    </p>
-                    <h3 className="mt-2 trackdocs-text-section-title">
-                      {shipment.trackingNo}
-                    </h3>
-                    <p className="mt-2 text-sm font-medium text-[var(--td-text-muted)]">{shipment.customerName}</p>
-                  </div>
-                </div>
-                <StatusBadge
-                  status={shipment.status}
-                  label={shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'}
-                  tone={shipment.status === 'RECEIVED' ? 'green' : 'amber'}
-                />
-              </div>
-
-              <div className="mt-6 rounded-[24px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.72)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
-                <p className="trackdocs-text-badge text-[var(--td-text-muted)]">
-                  หมายเหตุ
-                </p>
-                <p className="mt-3 trackdocs-text-body text-[var(--td-text-strong)]">
-                  {shipment.customerNote || '—'}
-                </p>
-              </div>
-
-              <div className="trackdocs-card-divider mt-6 pt-4" />
-
-              <div className="mt-auto flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                {canReceive ? (
-                  <button
-                    type="button"
-                    onClick={() => onReceive(shipment)}
-                    className="inline-flex items-center justify-center gap-2 rounded-[20px] trackdocs-button-primary px-4 py-3 text-sm font-semibold shadow-[0_16px_34px_rgba(215,234,73,0.24)] transition hover:-translate-y-0.5"
-                  >
-                    รับแล้ว
-                  </button>
-                ) : null}
-                <Link
-                  to={`/shipments/${shipment.shipmentId}`}
-                  state={{ shipment }}
-                  className="trackdocs-module-action inline-flex justify-center"
-                >
-                  ดูรายละเอียด
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            </article>
-          </div>
-        )
-      })}
-    </div>
   )
 }
 

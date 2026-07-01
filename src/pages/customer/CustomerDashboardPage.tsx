@@ -45,53 +45,6 @@ function normalizeDate(value: string) {
   return value ? value.slice(0, 10) : ''
 }
 
-function ShipmentListCard({ shipment }: { shipment: Shipment }) {
-  const statusLabel = shipment.status === 'RECEIVED' ? 'รับแล้ว' : 'ยังไม่ได้รับ'
-
-  return (
-    <Card tone="glass" padding="none" className="trackdocs-card-module flex flex-col rounded-[20px] border border-[rgba(15,23,42,0.05)] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="text-[15px] font-[800] tracking-tight text-[var(--td-text-strong)] truncate">
-              {shipment.trackingNo}
-            </h3>
-            <span className="text-[10px] font-[700] text-[var(--td-text-muted)] bg-[rgba(15,23,42,0.04)] px-2 py-0.5 rounded-full uppercase">
-              {shipment.customerCode}
-            </span>
-          </div>
-          <p className="text-[11.5px] font-[600] text-[var(--td-text-muted)] mt-1.5 flex items-center gap-1.5">
-            <CalendarDays className="h-3.5 w-3.5" />
-            {formatDateTime(shipment.createdAt)}
-          </p>
-        </div>
-        <StatusBadge status={shipment.status} label={statusLabel} />
-      </div>
-
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          {shipment.customerNote ? (
-            <div className="rounded-[12px] bg-[rgba(15,23,42,0.03)] px-3 py-1.5 text-[11.5px] font-[600] text-[var(--td-text-muted)] truncate border border-[rgba(0,0,0,0.02)]">
-              {shipment.customerNote}
-            </div>
-          ) : (
-            <div className="rounded-[12px] bg-[rgba(15,23,42,0.015)] px-3 py-1.5 text-[11px] font-[500] text-[rgba(15,23,42,0.3)] truncate border border-[rgba(0,0,0,0.01)]">
-              ไม่มีหมายเหตุ
-            </div>
-          )}
-        </div>
-        <Link
-          to={`/shipments/${shipment.shipmentId}`}
-          state={{ shipment }}
-          className="shrink-0 inline-flex items-center gap-1.5 text-[12px] font-[800] text-[#0891b2] bg-[#f0fbfd] px-3.5 py-2 rounded-full transition-colors active:bg-[#e0f7fc]"
-        >
-          ดูรายละเอียด
-          <ArrowUpRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
-    </Card>
-  )
-}
 
 export function CustomerDashboardPage() {
   const { session, signOut } = useAuth()
@@ -231,7 +184,7 @@ export function CustomerDashboardPage() {
   return (
     <AppShell
       density="compact"
-      title="ภาพรวมการทำงาน"
+      title="DASHBOARD"
       subtitle={`ติดตามสถานะงานจัดส่ง เอกสาร และการดำเนินงานของบริษัท ${session.customerCode ?? '-'} แบบเรียลไทม์`}
       actions={
         <>
@@ -397,13 +350,7 @@ export function CustomerDashboardPage() {
                       <p className="mt-1 trackdocs-text-body">อัปเดตล่าสุดเพื่อให้ติดตามและตรวจสอบเอกสารได้ต่อเนื่อง</p>
                     </div>
                   </div>
-                  <Link
-                    to="/customer/create-shipment"
-                    className="trackdocs-button-primary inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
-                  >
-                    ดูรายการทั้งหมด
-                    <ArrowUpRight className="h-4 w-4" />
-                  </Link>
+
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full border-separate border-spacing-0">
@@ -425,12 +372,9 @@ export function CustomerDashboardPage() {
                           className="border-t border-[rgba(15,23,42,0.06)] bg-[rgba(255,255,255,0.72)] align-middle transition hover:bg-[rgba(255,255,255,0.9)]"
                         >
                           <td className="px-4 py-3">
-                            <div className="space-y-1">
-                              <p className="trackdocs-text-body-strong text-[1rem]">
-                                {shipment.trackingNo}
-                              </p>
-                              <p className="trackdocs-text-caption text-[var(--td-text-muted)]">{shipment.customerCode}</p>
-                            </div>
+                            <p className="trackdocs-text-body-strong text-[1rem]">
+                              {shipment.trackingNo}
+                            </p>
                           </td>
                           <td className="px-4 py-3 trackdocs-text-body">{formatDate(shipment.sentDate)}</td>
                           <td className="px-4 py-3 trackdocs-text-body-strong">
@@ -490,13 +434,10 @@ export function CustomerDashboardPage() {
                       <div key={shipment.shipmentId} className="flex flex-col pt-4 first:pt-0">
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center">
                               <h3 className="text-[14px] font-[800] tracking-tight text-[var(--td-text-strong)] truncate">
                                 {shipment.trackingNo}
                               </h3>
-                              <span className="text-[9px] font-[700] text-[var(--td-text-muted)] bg-[rgba(15,23,42,0.04)] px-1.5 py-0.5 rounded-full uppercase">
-                                {shipment.customerCode}
-                              </span>
                             </div>
                             <p className="text-[11px] font-[600] text-[var(--td-text-muted)] mt-1.5 flex items-center gap-1.5">
                               <CalendarDays className="h-3.5 w-3.5" />

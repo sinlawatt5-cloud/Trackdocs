@@ -129,7 +129,7 @@ export function CreateShipmentPage() {
 
   if (authLoading || loadingCustomer) {
     return (
-      <AppShell density="compact" title="แจ้งส่งเอกสารใหม่" subtitle="กำลังเตรียมข้อมูล...">
+      <AppShell density="compact" title="Create Shipment" subtitle="กำลังเตรียมข้อมูล...">
         <LoadingState label="กำลังเตรียมข้อมูลสำหรับสร้างรายการ" />
       </AppShell>
     )
@@ -145,7 +145,7 @@ export function CreateShipmentPage() {
 
   if (errorMessage && !customer) {
     return (
-      <AppShell density="compact" title="แจ้งส่งเอกสารใหม่" subtitle="พบข้อผิดพลาด">
+      <AppShell density="compact" title="Create Shipment" subtitle="พบข้อผิดพลาด">
         <ErrorState title="ไม่สามารถเปิดหน้าสร้างรายการได้" message={errorMessage} onRetry={() => navigate(-1)} />
       </AppShell>
     )
@@ -245,7 +245,7 @@ export function CreateShipmentPage() {
   return (
     <AppShell
       density="compact"
-      title="แจ้งส่งเอกสารใหม่"
+      title="Create Shipment"
       subtitle="กรอกข้อมูลและอัปโหลดหลักฐาน ระบบจะสร้างรายการให้ทันที"
     >
       <div className="trackdocs-page-entrance w-full max-w-6xl mx-auto pb-[90px] lg:pb-0">
@@ -289,10 +289,7 @@ export function CreateShipmentPage() {
             {/* Desktop Header */}
             <div className="hidden lg:flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <div className="trackdocs-pill trackdocs-pill-soft inline-flex px-3 py-1.5 trackdocs-text-badge text-[var(--td-text-muted)]">
-                  สร้างรายการใหม่
-                </div>
-                <h2 className="mt-4 trackdocs-text-page-title">ส่งเอกสารจากลูกค้า</h2>
+                <h2 className="mt-4 trackdocs-text-page-title">สร้างรายการใหม่</h2>
                 <p className="mt-2 trackdocs-text-body text-[var(--td-text-muted)]">
                   กรอกข้อมูล สองรูปหลักฐาน แล้วกด submit ระบบจะจองเลขรายการ อัปโหลดรูป และบันทึกลง Firestore ให้อัตโนมัติ
                 </p>

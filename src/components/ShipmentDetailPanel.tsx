@@ -1,4 +1,4 @@
-import { CalendarDays, Hash, MapPin, PhoneCall, User2 } from 'lucide-react'
+import { CalendarDays, Hash, MessageSquare, PhoneCall, User2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { format } from 'date-fns'
 import { ImagePreview } from './ImagePreview'
@@ -31,22 +31,22 @@ export function ShipmentDetailPanel({ shipment, onPreviewImage }: ShipmentDetail
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <DetailItem icon={<Hash className="h-4 w-4" />} label="Customer code" value={shipment.customerCode} />
-          <DetailItem icon={<User2 className="h-4 w-4" />} label="Sender" value={shipment.senderName} />
-          <DetailItem icon={<PhoneCall className="h-4 w-4" />} label="Phone" value={shipment.senderPhone} />
+          <DetailItem icon={<Hash className="h-4 w-4 text-blue-500" />} label="ลูกค้า" value={shipment.customerCode} />
+          <DetailItem icon={<User2 className="h-4 w-4 text-violet-500" />} label="ผู้ส่ง" value={shipment.senderName} />
+          <DetailItem icon={<PhoneCall className="h-4 w-4 text-emerald-500" />} label="เบอร์โทร" value={shipment.senderPhone || '—'} />
           <DetailItem
-            icon={<CalendarDays className="h-4 w-4" />}
-            label="Sent date"
+            icon={<CalendarDays className="h-4 w-4 text-orange-500" />}
+            label="วันที่ส่ง"
             value={format(new Date(shipment.sentDate), 'dd MMM yyyy')}
           />
         </div>
 
         <div className="mt-6 rounded-[26px] border border-[rgba(15,23,42,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,245,238,0.96))] p-5">
           <div className="trackdocs-text-body-strong flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-[var(--td-primary)]" />
-            Customer note
+            <MessageSquare className="h-4 w-4 text-amber-500" />
+            หมายเหตุ
           </div>
-          <p className="trackdocs-text-body mt-3">{shipment.customerNote}</p>
+          <p className="trackdocs-text-body mt-3">{shipment.customerNote || '—'}</p>
         </div>
       </div>
 

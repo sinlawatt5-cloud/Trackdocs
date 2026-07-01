@@ -63,16 +63,16 @@ export function LoginPage() {
             padding="lg"
             className="trackdocs-login-card trackdocs-signal-panel login-page-enter relative overflow-hidden border border-[rgba(15,23,42,0.12)] bg-[linear-gradient(180deg,rgba(250,250,248,0.96),rgba(242,244,239,0.92))] p-6 shadow-[0_30px_100px_rgba(15,23,42,0.16)] sm:p-8"
           >
-            <div className="flex items-center gap-4 sm:gap-5">
+            <div className="flex items-center gap-3 sm:gap-5">
               <div 
-                className="trackdocs-brand-mark animate-fade-slide-up flex h-[72px] w-[72px] items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#f2f962_0%,#d7ea49_56%,#b9d82b_100%)] text-[#1a2106] shadow-[0_18px_34px_rgba(215,234,73,0.26)]"
+                className="trackdocs-brand-mark animate-fade-slide-up flex h-[54px] w-[54px] sm:h-[72px] sm:w-[72px] shrink-0 items-center justify-center rounded-[18px] sm:rounded-[24px] bg-[linear-gradient(135deg,#f2f962_0%,#d7ea49_56%,#b9d82b_100%)] text-[#1a2106] shadow-[0_12px_24px_rgba(215,234,73,0.2)] sm:shadow-[0_18px_34px_rgba(215,234,73,0.26)]"
                 style={{ animationDelay: '150ms', animationFillMode: 'both' }}
               >
-                <ShieldCheck className="h-9 w-9" />
+                <ShieldCheck className="h-7 w-7 sm:h-9 sm:w-9" />
               </div>
-              <div className="min-w-0 flex-1 overflow-hidden">
+              <div className="min-w-0 flex-1">
                 <h1 
-                  className="text-[clamp(40px,5vw,52px)] font-[700] uppercase tracking-[0.1em] italic whitespace-nowrap text-slate-900 leading-[1] text-ellipsis overflow-hidden"
+                  className="text-[32px] xs:text-[36px] sm:text-[40px] md:text-[52px] font-[900] uppercase tracking-[0.02em] italic whitespace-nowrap text-slate-900 leading-[1]"
                   style={{ 
                     fontFamily: '"Playfair Display", serif',
                     textRendering: 'geometricPrecision'

@@ -22,11 +22,6 @@ type ImagePreviewState = {
   label: string
 } | null
 
-const dashboardCopy: Record<'customer' | 'operation' | 'admin', string> = {
-  customer: 'ลูกค้า',
-  operation: 'Operation',
-  admin: 'Admin',
-}
 
 export function ShipmentDetailPage() {
   const { id } = useParams()
@@ -87,7 +82,7 @@ export function ShipmentDetailPage() {
 
   const activeSession = session
   const backPath = roleHomePath[activeSession.role]
-  const backLabel = `กลับสู่แดชบอร์ด ${dashboardCopy[activeSession.role]}`
+  const backLabel = 'กลับสู่แดชบอร์ด'
 
   if (loading) {
     return (
@@ -103,7 +98,7 @@ export function ShipmentDetailPage() {
         title="Shipment detail"
         subtitle="Inspect a single proof record."
         actions={
-          <Button tone="slate" onClick={() => navigate(backPath, { replace: true })} className="px-4 py-2 text-sm">
+          <Button tone="lime" onClick={() => navigate(backPath, { replace: true })} className="px-4 py-2 text-sm text-[#171c01] border border-[rgba(0,0,0,0.12)]">
             <ArrowLeft className="h-4 w-4" />
             {backLabel}
           </Button>
@@ -154,7 +149,7 @@ export function ShipmentDetailPage() {
       hideTopbarMobile
       actions={
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <Button tone="slate" onClick={() => navigate(backPath, { replace: true })} className="px-4 py-2 text-sm">
+          <Button tone="lime" onClick={() => navigate(backPath, { replace: true })} className="px-4 py-2 text-sm text-[#171c01] border border-[rgba(0,0,0,0.12)]">
             <ArrowLeft className="h-4 w-4" />
             {backLabel}
           </Button>
@@ -163,11 +158,7 @@ export function ShipmentDetailPage() {
               <ShieldCheck className="h-4 w-4" />
               ยืนยันรับแล้ว
             </Button>
-          ) : (
-            <div className="rounded-full border border-[rgba(15,23,42,0.08)] bg-white px-4 py-2 trackdocs-text-badge text-[var(--td-text-muted)] shadow-[0_10px_24px_rgba(17,17,17,0.05)]">
-              {shipment.status === 'RECEIVED' ? 'รายการนี้รับแล้ว' : 'สิทธิ์อ่านอย่างเดียว'}
-            </div>
-          )}
+          ) : null}
         </div>
       }
     >

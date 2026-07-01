@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { LogOut, RefreshCw, UserRound, CalendarDays, Search, ArrowUpRight } from 'lucide-react'
+import { CalendarDays, Search, ArrowUpRight } from 'lucide-react'
 import { format } from 'date-fns'
 import { StatusBadge } from '../../components/StatusBadge'
 import { AppShell } from '../../components/AppShell'
@@ -19,7 +19,7 @@ function formatDateTime(value: string) {
 }
 
 export function AdminDashboardPage() {
-  const { session, signOut } = useAuth()
+  const { session } = useAuth()
   const [shipments, setShipments] = useState<Shipment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -71,12 +71,12 @@ export function AdminDashboardPage() {
   }, [shipments, filter, query, date])
 
   if (!session) return null
-  if (loading) return <AppShell title="ศูนย์รับเอกสาร"><LoadingState /></AppShell>
-  if (error) return <AppShell title="ศูนย์รับเอกสาร"><ErrorState message={error} /></AppShell>
+  if (loading) return <AppShell title="DASHBOARD"><LoadingState /></AppShell>
+  if (error) return <AppShell title="DASHBOARD"><ErrorState message={error} /></AppShell>
 
   return (
     <AppShell
-      title="ศูนย์รับเอกสาร"
+      title="DASHBOARD"
       subtitle="ตรวจรับเอกสารจากทุกบริษัท ครบจบในที่เดียว"
       density="compact"
     >

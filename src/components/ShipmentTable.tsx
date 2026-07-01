@@ -58,18 +58,12 @@ export function ShipmentTable({ shipments, onReceive }: ShipmentTableProps) {
           <tbody className="trackdocs-stagger-list divide-y divide-[rgba(17,17,17,0.08)]">
             {shipments.map((shipment) => (
               <tr key={shipment.shipmentId} className="transition hover:bg-[rgba(248,246,239,0.92)]">
-                <td className="px-5 py-4 align-top">
-                  <div>
-                    <p className="trackdocs-text-body-strong">{shipment.trackingNo}</p>
-                    <p className="trackdocs-text-caption mt-1 text-[var(--td-text-muted)]">Shipment ID</p>
-                  </div>
+                <td className="px-5 py-4 align-middle">
+                  <p className="trackdocs-text-body-strong">{shipment.trackingNo}</p>
                 </td>
                 <td className="px-5 py-4 trackdocs-text-body-strong whitespace-nowrap">{shipment.customerCode}</td>
-                <td className="px-5 py-4 trackdocs-text-body text-[var(--td-text-strong)]">
-                  <div className="min-w-[180px]">
-                    <p className="trackdocs-text-body-strong">{shipment.customerName}</p>
-                    <p className="trackdocs-text-caption mt-1 text-[var(--td-text-muted)]">รหัสลูกค้า {shipment.customerId}</p>
-                  </div>
+                <td className="px-5 py-4 align-middle">
+                  <p className="trackdocs-text-body-strong">{shipment.customerName}</p>
                 </td>
                 <td className="px-5 py-4 trackdocs-text-body whitespace-nowrap">{formatDateLabel(shipment.sentDate)}</td>
                 <td className="px-5 py-4 trackdocs-text-body-strong whitespace-nowrap">{shipment.envelopeCount}</td>

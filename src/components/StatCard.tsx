@@ -20,14 +20,7 @@ const badgeIconMap: Record<DashboardStat['tone'], typeof Activity> = {
   lime: Activity,
 }
 
-const toneMap: Record<DashboardStat['tone'], string> = {
-  cyan: 'bg-[rgba(236,251,255,0.4)]',
-  amber: 'bg-[rgba(255,248,236,0.4)]',
-  green: 'bg-[rgba(240,255,246,0.4)]',
-  red: 'bg-[rgba(255,240,240,0.4)]',
-  slate: 'bg-[rgba(248,250,251,0.4)]',
-  lime: 'bg-[rgba(244,249,216,0.4)]',
-}
+
 
 const iconMap: Record<DashboardStat['tone'], typeof Box> = {
   cyan: Box,

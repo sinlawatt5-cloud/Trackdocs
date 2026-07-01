@@ -151,7 +151,7 @@ service cloud.firestore {
       }
 
       function validCounterCreate() {
-        return request.resource.data.keys().hasOnly(['companyCode', 'lastNumber', 'updatedAt'])
+        return request.resource.data.keys().hasOnly(['companyCode', 'lastNumber', 'updatedAt', 'isActive'])
           && request.resource.data.companyCode == customerCode
           && request.resource.data.lastNumber is number
           && request.resource.data.lastNumber == 1
@@ -159,7 +159,7 @@ service cloud.firestore {
       }
 
       function validCounterUpdate() {
-        return request.resource.data.keys().hasOnly(['companyCode', 'lastNumber', 'updatedAt'])
+        return request.resource.data.keys().hasOnly(['companyCode', 'lastNumber', 'updatedAt', 'isActive'])
           && resource.data.companyCode == customerCode
           && request.resource.data.companyCode == customerCode
           && request.resource.data.lastNumber is number
